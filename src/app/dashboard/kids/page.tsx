@@ -34,7 +34,6 @@ export default function KidsDashboard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [images, setImages] = useState<StoryImages | null>(null);
-  const [storyText, setStoryText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter books based on search query
@@ -56,19 +55,14 @@ export default function KidsDashboard() {
         setProgressStatus(status.message);
         setCurrentStep(status.step);
         setTotalSteps(status.totalSteps);
-
-        if (status.data?.text) {
-          setStoryText(status.data.text);
-        }
       });
 
       if (result.success && result.data) {
         setImages(result.data.images as StoryImages);
         setProgressStatus('Storybook generated successfully!');
 
-        setTimeout(() => {
-          refetch();
-        }, 2000);
+        // Immediately refetch books to show the new one
+        refetch();
       } else {
         setProgressStatus(`Error: ${result.error || 'Unknown error'}`);
       }
@@ -204,6 +198,18 @@ export default function KidsDashboard() {
           </button>
         </div>
       </div>
+
+      {/* Progress bar section - moved below Generate New Book button */}
+      {isGenerating && (
+        <div className="mt-12 w-2xl mx-auto">
+          <div className="bg-gray-200 rounded-full h-4 mb-2">
+            <div className="bg-blue-500 h-4 rounded-full" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
+          </div>
+          <p className="text-gray-700 text-center">
+            Step {currentStep} of {totalSteps}: {progressStatus}
+          </p>
+        </div>
+      )}
 
       <div className="mt-8 mb-8 bg-[#1f4c9f] px-6 py-3 rounded-lg flex justify-between items-center">
         <div className="flex items-center relative">
@@ -361,26 +367,8 @@ export default function KidsDashboard() {
         )}
       </div>
 
-      {isGenerating && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-2">Progress</h2>
-          <div className="bg-gray-200 rounded-full h-4 mb-2">
-            <div className="bg-blue-500 h-4 rounded-full" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
-          </div>
-          <p className="text-gray-700">
-            Step {currentStep} of {totalSteps}: {progressStatus}
-          </p>
-        </div>
-      )}
-
-      {storyText && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-2">Story Text</h2>
-          <div className="bg-gray-100 p-4 rounded whitespace-pre-wrap">{storyText}</div>
-        </div>
-      )}
-
-      {images && (
+      {/* Images section - only shown when actual images are generated and generation is complete */}
+      {!isGenerating && images && (
         <div>
           <h2 className="text-xl font-semibold mb-4">Generated Images</h2>
 
