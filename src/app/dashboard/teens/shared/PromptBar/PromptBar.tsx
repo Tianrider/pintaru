@@ -12,20 +12,20 @@ interface PromptBarProps {
 const recommendations = [
   {
     icon: <Sigma className="text-red-400" strokeWidth={3} size={16} />,
-    text: 'Find x in 2x + 3 = 7',
+    text: 'Carilah nilai x di 2x + 3 = 7',
   },
   {
     icon: <Leaf className="text-green-400" strokeWidth={3} size={16} />,
-    text: 'What is photosynthesis?',
+    text: 'Apa itu fotosintesis?',
   },
   {
     icon: <Stethoscope className="text-blue-400" strokeWidth={3} size={16} />,
-    text: 'How does lung cancer develop?',
+    text: 'Bagaimana cara kanker paru-paru terjadi?',
   },
 
   {
     icon: <CircuitBoard className="text-yellow-400" strokeWidth={3} size={16} />,
-    text: 'How does a computer store data?',
+    text: 'Bagaimana cara komputer menyimpan data?',
   },
 ];
 
@@ -77,7 +77,7 @@ export default function PromptBar({ onVideoRequest }: PromptBarProps) {
       <form onSubmit={handleSubmit} className="flex w-full">
         <div className="flex w-full px-3 pl-2 sm:pl-8 rounded-full items-center space-x-2 relative border bg-white py-1.5 text-base shadow-md transition-all duration-200 outline-none h-14 hover:shadow-lg">
           <Sparkles className="text-yellow-500 scale-125 sm:scale-150 hidden sm:block" size={20} />
-          <Input placeholder="Generate anything..." className="!text-xl border-none shadow-none focus:ring-0" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+          <Input placeholder="Ketik atau upload soal di sini" className="!text-xl border-none shadow-none focus:ring-0" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
 
           <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange} className="hidden" />
 

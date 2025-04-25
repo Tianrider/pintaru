@@ -38,35 +38,19 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
     refetchOnMount: true,
   });
 
-<<<<<<< HEAD
-	// Function to add a temporary video entry
-	const addTemporaryVideo = (prompt: string) => {
-		queryClient.setQueryData<VideoDataType[]>(["videos"], (old) => {
-			const tempVideo: VideoDataType = {
-				id: Date.now(),
-				title: prompt,
-				prompt: "Generating video...",
-				video_url: "",
-				subject: "Processing",
-				created_at: new Date().toISOString(),
-				user_id: "",
-				is_ready: false,
-			};
-=======
   // Function to add a temporary video entry
   const addTemporaryVideo = (prompt: string) => {
     queryClient.setQueryData<VideoDataType[]>(['videos'], (old) => {
       const tempVideo: VideoDataType = {
         id: Date.now(),
         title: prompt,
-        description: 'Generating video...',
+        prompt: 'Generating video...',
         video_url: '',
         subject: 'Processing',
         created_at: new Date().toISOString(),
         user_id: '',
         is_ready: false,
       };
->>>>>>> main
 
       if (!old) return [tempVideo];
       return [tempVideo, ...old];
@@ -122,18 +106,18 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
   return (
     <div className="mt-8 gap-5 flex flex-col">
       <div className="flex justify-between items-center">
-        <GroupHeader title="Check Our Collection" />
+        <GroupHeader title="Temukan Video Baru Dari dari Komunitas Lainnya" />
       </div>
       <div className="flex gap-4 max-w-4xl mx-auto w-full flex-wrap md:flex-nowrap">
         <div className="w-full md:w-[70%] relative h-12">
-          <Input placeholder="Search your videos..." className="rounded-full h-full px-11 border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 focus:border-secondary-yellow text-base" value={search} onChange={handleSearch} />
+          <Input placeholder="Cari Videomu.." className="rounded-full h-full px-11 border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 focus:border-secondary-yellow text-base" value={search} onChange={handleSearch} />
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center">
             <Search className="text-gray-400" size={18} />
           </div>
         </div>
         <div className="w-full md:w-[30%]">
           <div className="relative">
-            <MultiSelect placeholder="Filter by subjects" options={subjects} value={selectedSubjects} onChange={handleSubjectsChange} className="w-full rounded-full shadow-sm flex px-2 items-center hover:shadow-md transition-all duration-200 text-base h-auto min-h-12" badgeClassName="my-1" />
+            <MultiSelect placeholder="Pilih Mata Pelajaran" options={subjects} value={selectedSubjects} onChange={handleSubjectsChange} className="w-full rounded-full shadow-sm flex px-2 items-center hover:shadow-md transition-all duration-200 text-base h-auto min-h-12" badgeClassName="my-1" />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
                 <path d="m6 9 6 6 6-6" />
@@ -165,34 +149,8 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
           )}
         </div>
 
-<<<<<<< HEAD
-				{totalPages > 1 && (
-					<div className="flex justify-center my-8">
-						<Pagination
-							color="#d9a821"
-							total={totalPages}
-							value={page}
-							onChange={setPage}
-							radius="xl"
-							size="md"
-							styles={{
-								control: {
-									border: "1px solid #e5e7eb",
-									"&[dataActive]": {
-										backgroundColor: "#d9a821",
-										borderColor: "#d9a821",
-									},
-								},
-							}}
-						/>
-					</div>
-				)}
-			</div>
-		</div>
-	);
-=======
         {totalPages > 1 && (
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center my-8">
             <Pagination
               color="#d9a821"
               total={totalPages}
@@ -215,7 +173,6 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
       </div>
     </div>
   );
->>>>>>> main
 });
 
 VideoList.displayName = 'VideoList';

@@ -25,9 +25,11 @@ export default function Dashboard() {
   return (
     <>
       <ProfileSection />
-      <PromptBar onVideoRequest={handleVideoRequest} />
-      {/* <Banner /> */}
-      <VideoList ref={videoListRef} />
+      <div className="lg:px-0 px-4">
+        <PromptBar onVideoRequest={handleVideoRequest} />
+        {/* <Banner /> */}
+        <VideoList ref={videoListRef} />
+      </div>
     </>
   );
 }

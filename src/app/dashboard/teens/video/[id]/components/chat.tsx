@@ -1,445 +1,342 @@
-"use client";
-import {useChat} from "@ai-sdk/react";
-import {useState, FormEvent, ChangeEvent, useEffect, useRef} from "react";
-import ReactMarkdown from "react-markdown";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import remarkGfm from "remark-gfm";
-import "katex/dist/katex.min.css";
+'use client';
+import { useChat } from '@ai-sdk/react';
+import { useState, FormEvent, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import remarkGfm from 'remark-gfm';
+import 'katex/dist/katex.min.css';
 
 interface ChatProps {
-	imageData?: string | null;
-	timestamp?: string;
+  imageData?: string | null;
+  timestamp?: string;
 }
 
 // Define type for file parts
 interface FilePart {
-	type: "file";
-	mimeType: string;
-	data: string;
+  type: 'file';
+  mimeType: string;
+  data: string;
 }
 
 // Function to resize image and return a smaller data URL
-const resizeImage = (
-	dataUrl: string,
-	maxWidth = 800,
-	maxHeight = 800,
-	quality = 0.7
-): Promise<string> => {
-	return new Promise((resolve, reject) => {
-		try {
-			// Check if running in a browser environment
-			if (typeof document === "undefined") {
-				reject(
-					new Error("Cannot resize image in non-browser environment")
-				);
-				return;
-			}
+const resizeImage = (dataUrl: string, maxWidth = 800, maxHeight = 800, quality = 0.7): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    try {
+      // Check if running in a browser environment
+      if (typeof document === 'undefined') {
+        reject(new Error('Cannot resize image in non-browser environment'));
+        return;
+      }
 
-			const img = new Image();
-			img.onload = () => {
-				try {
-					let width = img.width;
-					let height = img.height;
+      const img = new Image();
+      img.onload = () => {
+        try {
+          let width = img.width;
+          let height = img.height;
 
-					// Calculate new dimensions while maintaining aspect ratio
-					if (width > height) {
-						if (width > maxWidth) {
-							height = Math.round(height * (maxWidth / width));
-							width = maxWidth;
-						}
-					} else {
-						if (height > maxHeight) {
-							width = Math.round(width * (maxHeight / height));
-							height = maxHeight;
-						}
-					}
+          // Calculate new dimensions while maintaining aspect ratio
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round(height * (maxWidth / width));
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round(width * (maxHeight / height));
+              height = maxHeight;
+            }
+          }
 
-					// Create canvas and resize
-					const canvas = document.createElement("canvas");
-					canvas.width = width;
-					canvas.height = height;
+          // Create canvas and resize
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
 
-					// Draw resized image
-					const ctx = canvas.getContext("2d");
-					if (!ctx) {
-						reject(new Error("Could not get canvas context"));
-						return;
-					}
+          // Draw resized image
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Could not get canvas context'));
+            return;
+          }
 
-					ctx.drawImage(img, 0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
 
-					// Get new data URL with reduced quality
-					const resizedDataUrl = canvas.toDataURL(
-						"image/jpeg",
-						quality
-					);
-					console.log(
-						`Resized image: Original size: ${dataUrl.length}, New size: ${resizedDataUrl.length}`
-					);
+          // Get new data URL with reduced quality
+          const resizedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          console.log(`Resized image: Original size: ${dataUrl.length}, New size: ${resizedDataUrl.length}`);
 
-					resolve(resizedDataUrl);
-				} catch (error) {
-					reject(error);
-				}
-			};
+          resolve(resizedDataUrl);
+        } catch (error) {
+          reject(error);
+        }
+      };
 
-			img.onerror = () => {
-				reject(new Error("Error loading image"));
-			};
+      img.onerror = () => {
+        reject(new Error('Error loading image'));
+      };
 
-			img.src = dataUrl;
-		} catch (error) {
-			reject(error);
-		}
-	});
+      img.src = dataUrl;
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 
 // Maximum file size in bytes (5MB)
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+// const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-export default function Chat({imageData, timestamp}: ChatProps) {
-	const {messages, input, handleInputChange, handleSubmit, isLoading} =
-		useChat({
-			onError: (error) => {
-				console.error("Chat API error:", error);
-			},
-		});
-	const [imageUrl, setImageUrl] = useState<string>("");
-	const [imagePreview, setImagePreview] = useState<string>("");
-	const [isProcessing, setIsProcessing] = useState<boolean>(false);
-	const [processingError, setProcessingError] = useState<string>("");
-	const messagesEndRef = useRef<HTMLDivElement>(null);
+export default function Chat({ imageData, timestamp }: ChatProps) {
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    onError: (error) => {
+      console.error('Chat API error:', error);
+    },
+  });
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [processingError, setProcessingError] = useState<string>('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-	// Auto-scroll to bottom when messages change
-	useEffect(() => {
-		messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
-	}, [messages, isLoading]);
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
 
-	// Helper function to handle image processing errors
-	const handleImageProcessingError = (
-		error: Error | unknown,
-		fallbackImage?: string
-	) => {
-		console.error("Error processing image:", error);
-		setProcessingError(
-			error instanceof Error ? error.message : "Failed to process image"
-		);
+  // Helper function to handle image processing errors
+  const handleImageProcessingError = (error: Error | unknown, fallbackImage?: string) => {
+    console.error('Error processing image:', error);
+    setProcessingError(error instanceof Error ? error.message : 'Failed to process image');
 
-		if (fallbackImage) {
-			setImagePreview(fallbackImage);
-			setImageUrl(fallbackImage);
-		}
+    if (fallbackImage) {
+      setImagePreview(fallbackImage);
+      setImageUrl(fallbackImage);
+    }
 
-		setIsProcessing(false);
-	};
+    setIsProcessing(false);
+  };
 
-	// Update imageUrl and preview when imageData changes
-	useEffect(() => {
-		if (!imageData) return;
+  // Update imageUrl and preview when imageData changes
+  useEffect(() => {
+    if (!imageData) return;
 
-		let isMounted = true;
-		setProcessingError("");
+    let isMounted = true;
+    setProcessingError('');
 
-		try {
-			// Validate data URL format
-			if (imageData.startsWith("data:image/")) {
-				setIsProcessing(true);
+    try {
+      // Validate data URL format
+      if (imageData.startsWith('data:image/')) {
+        setIsProcessing(true);
 
-				// Resize the image to reduce its size
-				resizeImage(imageData)
-					.then((resizedImage) => {
-						if (isMounted) {
-							setImagePreview(resizedImage);
-							setImageUrl(resizedImage);
-							setIsProcessing(false);
+        // Resize the image to reduce its size
+        resizeImage(imageData)
+          .then((resizedImage) => {
+            if (isMounted) {
+              setImagePreview(resizedImage);
+              setImageUrl(resizedImage);
+              setIsProcessing(false);
 
-							// Show a system message when new image context is added
-							const textarea = document.getElementById(
-								"chat-input"
-							) as HTMLInputElement;
-							if (textarea) {
-								textarea.placeholder = `Ask about this frame at ${
-									timestamp || "current position"
-								}...`;
-								textarea.focus();
-							}
-						}
-					})
-					.catch((error) => {
-						if (isMounted) {
-							handleImageProcessingError(error, imageData);
-						}
-					});
-			}
-		} catch (error) {
-			if (isMounted) {
-				handleImageProcessingError(error);
-			}
-		}
+              // Show a system message when new image context is added
+              const textarea = document.getElementById('chat-input') as HTMLInputElement;
+              if (textarea) {
+                textarea.placeholder = `Ask about this frame at ${timestamp || 'current position'}...`;
+                textarea.focus();
+              }
+            }
+          })
+          .catch((error) => {
+            if (isMounted) {
+              handleImageProcessingError(error, imageData);
+            }
+          });
+      }
+    } catch (error) {
+      if (isMounted) {
+        handleImageProcessingError(error);
+      }
+    }
 
-		// Cleanup function to prevent state updates if component unmounts
-		return () => {
-			isMounted = false;
-		};
-	}, [imageData, timestamp]);
+    // Cleanup function to prevent state updates if component unmounts
+    return () => {
+      isMounted = false;
+    };
+  }, [imageData, timestamp]);
 
-	const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		setProcessingError("");
+  // const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  // 	const file = e.target.files?.[0];
+  // 	setProcessingError("");
 
-		if (!file) return;
+  // 	if (!file) return;
 
-		// Check file size
-		if (file.size > MAX_FILE_SIZE) {
-			setProcessingError(
-				`File too large. Maximum size is ${
-					MAX_FILE_SIZE / (1024 * 1024)
-				}MB`
-			);
-			return;
-		}
+  // 	// Check file size
+  // 	if (file.size > MAX_FILE_SIZE) {
+  // 		setProcessingError(
+  // 			`File too large. Maximum size is ${
+  // 				MAX_FILE_SIZE / (1024 * 1024)
+  // 			}MB`
+  // 		);
+  // 		return;
+  // 	}
 
-		// Validate file type
-		if (!file.type.startsWith("image/")) {
-			setProcessingError("Only image files are allowed");
-			return;
-		}
+  // 	// Validate file type
+  // 	if (!file.type.startsWith("image/")) {
+  // 		setProcessingError("Only image files are allowed");
+  // 		return;
+  // 	}
 
-		try {
-			setIsProcessing(true);
+  // 	try {
+  // 		setIsProcessing(true);
 
-			const reader = new FileReader();
+  // 		const reader = new FileReader();
 
-			reader.onloadend = () => {
-				const result = reader.result as string;
+  // 		reader.onloadend = () => {
+  // 			const result = reader.result as string;
 
-				// Validate data URL format
-				if (result && result.startsWith("data:image/")) {
-					// Resize the image
-					resizeImage(result)
-						.then((resizedImage) => {
-							setImagePreview(resizedImage);
-							setImageUrl(resizedImage);
-							setIsProcessing(false);
-						})
-						.catch((error) => {
-							handleImageProcessingError(error, result);
-						});
-				} else {
-					setProcessingError("Invalid image format");
-					setIsProcessing(false);
-				}
-			};
+  // 			// Validate data URL format
+  // 			if (result && result.startsWith("data:image/")) {
+  // 				// Resize the image
+  // 				resizeImage(result)
+  // 					.then((resizedImage) => {
+  // 						setImagePreview(resizedImage);
+  // 						setImageUrl(resizedImage);
+  // 						setIsProcessing(false);
+  // 					})
+  // 					.catch((error) => {
+  // 						handleImageProcessingError(error, result);
+  // 					});
+  // 			} else {
+  // 				setProcessingError("Invalid image format");
+  // 				setIsProcessing(false);
+  // 			}
+  // 		};
 
-			reader.onerror = () => {
-				handleImageProcessingError(new Error("Error reading file"));
-			};
+  // 		reader.onerror = () => {
+  // 			handleImageProcessingError(new Error("Error reading file"));
+  // 		};
 
-			reader.readAsDataURL(file);
-		} catch (error) {
-			handleImageProcessingError(error);
-		}
-	};
+  // 		reader.readAsDataURL(file);
+  // 	} catch (error) {
+  // 		handleImageProcessingError(error);
+  // 	}
+  // };
 
-	const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-		if (isProcessing) {
-			e.preventDefault();
-			return;
-		}
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    if (isProcessing) {
+      e.preventDefault();
+      return;
+    }
 
-		try {
-			// Clear image and errors after submission
-			const currentImageUrl = imageUrl; // Save before clearing
-			setImagePreview("");
-			setImageUrl("");
-			setProcessingError("");
+    try {
+      // Clear image and errors after submission
+      const currentImageUrl = imageUrl; // Save before clearing
+      setImagePreview('');
+      setImageUrl('');
+      setProcessingError('');
 
-			handleSubmit(e, {
-				data: {imageUrl: currentImageUrl || null},
-			});
-		} catch (error) {
-			console.error("Error submitting form:", error);
-		}
-	};
+      handleSubmit(e, {
+        data: { imageUrl: currentImageUrl || null },
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
 
-	return (
-		<div className="flex flex-col h-full w-full relative mx-auto">
-			<p className="font-bold text-3xl mb-4 px-6 py-4">Live Chat</p>
-			<div className="overflow-y-auto h-full flex flex-col gap-4 pb-20 px-6">
-				{messages.map((message) => (
-					<div
-						key={message.id}
-						className={`flex ${
-							message.role === "user"
-								? "justify-end"
-								: "justify-start"
-						}`}
-					>
-						<div
-							className={`whitespace-pre-wrap p-4 rounded-lg max-w-[80%] ${
-								message.role === "user"
-									? "bg-blue-300/50 rounded-tr-none"
-									: "bg-gray-100 border border-gray-200 rounded-tl-none"
-							}`}
-						>
-							{message.role === "user" ? (
-								typeof message.content === "string" ? (
-									<div>{message.content}</div>
-								) : (
-									message.parts.map((part, i) => {
-										if (part.type === "text") {
-											return (
-												<div key={`${message.id}-${i}`}>
-													{
-														(part as {text: string})
-															.text
-													}
-												</div>
-											);
-										}
-										// Handle other part types as needed
-										return null;
-									})
-								)
-							) : (
-								// Use ReactMarkdown for AI responses
-								<div className="prose prose-sm max-w-none prose-pre:bg-gray-800 prose-pre:text-gray-100 prose-headings:mb-1 prose-p:mb-2">
-									<ReactMarkdown
-										remarkPlugins={[remarkMath, remarkGfm]}
-										rehypePlugins={[rehypeKatex]}
-									>
-										{typeof message.content === "string"
-											? message.content
-											: message.parts
-													.filter(
-														(part) =>
-															part.type === "text"
-													)
-													.map(
-														(part) =>
-															(
-																part as {
-																	text: string;
-																}
-															).text
-													)
-													.join("\n")}
-									</ReactMarkdown>
-								</div>
-							)}
+  return (
+    <div className="flex flex-col h-full w-full relative mx-auto">
+      <p className="font-bold text-3xl mb-4 px-6 py-4">Live Chat</p>
+      <div className="overflow-y-auto h-full flex flex-col gap-4 pb-20 px-6">
+        {messages.map((message) => (
+          <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`whitespace-pre-wrap p-4 rounded-lg max-w-[80%] ${message.role === 'user' ? 'bg-blue-300/50 rounded-tr-none' : 'bg-gray-100 border border-gray-200 rounded-tl-none'}`}>
+              {message.role === 'user' ? (
+                typeof message.content === 'string' ? (
+                  <div>{message.content}</div>
+                ) : (
+                  message.parts.map((part, i) => {
+                    if (part.type === 'text') {
+                      return <div key={`${message.id}-${i}`}>{(part as { text: string }).text}</div>;
+                    }
+                    // Handle other part types as needed
+                    return null;
+                  })
+                )
+              ) : (
+                // Use ReactMarkdown for AI responses
+                <div className="prose prose-sm max-w-none prose-pre:bg-gray-800 prose-pre:text-gray-100 prose-headings:mb-1 prose-p:mb-2">
+                  <ReactMarkdown remarkPlugins={[remarkMath, remarkGfm]} rehypePlugins={[rehypeKatex]}>
+                    {typeof message.content === 'string'
+                      ? message.content
+                      : message.parts
+                          .filter((part) => part.type === 'text')
+                          .map(
+                            (part) =>
+                              (
+                                part as {
+                                  text: string;
+                                }
+                              ).text
+                          )
+                          .join('\n')}
+                  </ReactMarkdown>
+                </div>
+              )}
 
-							{/* Handle image parts separately */}
-							{typeof message.content !== "string" &&
-								message.parts.map((part, i) => {
-									if (
-										part.type === "file" &&
-										"mimeType" in part &&
-										part.mimeType?.startsWith("image/")
-									) {
-										// Handle file parts (for images)
-										const filePart = part as FilePart;
-										return (
-											<div
-												key={`${message.id}-file-${i}`}
-												className="mt-2"
-											>
-												<img
-													src={`data:${filePart.mimeType};base64,${filePart.data}`}
-													alt="Image content"
-													className="max-h-60 w-auto rounded-lg"
-												/>
-											</div>
-										);
-									}
-									return null;
-								})}
-						</div>
-					</div>
-				))}
+              {/* Handle image parts separately */}
+              {typeof message.content !== 'string' &&
+                message.parts.map((part, i) => {
+                  if (part.type === 'file' && 'mimeType' in part && part.mimeType?.startsWith('image/')) {
+                    // Handle file parts (for images)
+                    const filePart = part as FilePart;
+                    return (
+                      <div key={`${message.id}-file-${i}`} className="mt-2">
+                        <img src={`data:${filePart.mimeType};base64,${filePart.data}`} alt="Image content" className="max-h-60 w-auto rounded-lg" />
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+            </div>
+          </div>
+        ))}
 
-				{/* Skeleton loader only when processing image inputs */}
-				{isLoading && imageUrl && (
-					<div className="flex justify-start">
-						<div className="bg-gray-100 border border-gray-200 rounded-lg rounded-tl-none p-4 w-[80%] animate-pulse">
-							<div className="h-4 bg-gray-300 rounded-full w-3/4 mb-2"></div>
-							<div className="h-4 bg-gray-300 rounded-full w-1/2 mb-2"></div>
-							<div className="h-4 bg-gray-300 rounded-full w-5/6"></div>
-						</div>
-					</div>
-				)}
+        {/* Skeleton loader only when processing image inputs */}
+        {isLoading && imageUrl && (
+          <div className="flex justify-start">
+            <div className="bg-gray-100 border border-gray-200 rounded-lg rounded-tl-none p-4 w-[80%] animate-pulse">
+              <div className="h-4 bg-gray-300 rounded-full w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-300 rounded-full w-1/2 mb-2"></div>
+              <div className="h-4 bg-gray-300 rounded-full w-5/6"></div>
+            </div>
+          </div>
+        )}
 
-				{processingError && (
-					<div className="text-sm text-red-500 mb-2 p-3 bg-red-50 rounded">
-						{processingError}
-					</div>
-				)}
+        {processingError && <div className="text-sm text-red-500 mb-2 p-3 bg-red-50 rounded">{processingError}</div>}
 
-				{/* Invisible div for scrolling to bottom */}
-				<div ref={messagesEndRef} />
-			</div>
+        {/* Invisible div for scrolling to bottom */}
+        <div ref={messagesEndRef} />
+      </div>
 
-			{imagePreview && (
-				<div className="absolute bottom-[75px] left-0 w-full px-3">
-					<div className="bg-blue-500/10 py-1 px-3 rounded-t-md text-xs flex items-center gap-1 border-t border-x border-blue-200 max-w-fit mx-auto">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="12"
-							height="12"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							className="text-blue-500"
-						>
-							<circle cx="12" cy="12" r="10"></circle>
-							<polyline points="12 6 12 12 16 14"></polyline>
-						</svg>
-						Seeing {timestamp || "current frame"}
-					</div>
-				</div>
-			)}
+      {imagePreview && (
+        <div className="absolute bottom-[75px] left-0 w-full px-3">
+          <div className="bg-blue-500/10 py-1 px-3 rounded-t-md text-xs flex items-center gap-1 border-t border-x border-blue-200 max-w-fit mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Seeing {timestamp || 'current frame'}
+          </div>
+        </div>
+      )}
 
-			<form
-				onSubmit={handleFormSubmit}
-				className="w-full absolute bottom-0 p-3 bg-white border-t"
-			>
-				<div className="flex gap-2">
-					<input
-						id="chat-input"
-						className="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-						value={input}
-						placeholder={
-							isProcessing
-								? "Processing image..."
-								: imagePreview
-								? `Ask about video at ${
-										timestamp || "current position"
-								  }...`
-								: "Type a message..."
-						}
-						onChange={handleInputChange}
-					/>
-					<button
-						type="submit"
-						className="p-3 px-5 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-						disabled={
-							isLoading ||
-							isProcessing ||
-							(!input.trim() && !imageUrl)
-						}
-					>
-						{isLoading ? "Sending..." : "Send"}
-					</button>
-				</div>
-				{isProcessing && (
-					<div className="text-xs text-center mt-2 text-zinc-500">
-						Optimizing image...
-					</div>
-				)}
-			</form>
-		</div>
-	);
+      <form onSubmit={handleFormSubmit} className="w-full absolute bottom-0 p-3 bg-white border-t">
+        <div className="flex gap-2">
+          <input id="chat-input" className="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={input} placeholder={isProcessing ? 'Processing image...' : imagePreview ? `Ask about video at ${timestamp || 'current position'}...` : 'Type a message...'} onChange={handleInputChange} />
+          <button type="submit" className="p-3 px-5 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled={isLoading || isProcessing || (!input.trim() && !imageUrl)}>
+            {isLoading ? 'Sending...' : 'Send'}
+          </button>
+        </div>
+        {isProcessing && <div className="text-xs text-center mt-2 text-zinc-500">Optimizing image...</div>}
+      </form>
+    </div>
+  );
 }
