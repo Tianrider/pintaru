@@ -27,7 +27,7 @@ export default function Home() {
                 <p className="bg-primary-yellow/20 rounded-full w-fit px-4 py-1 text-gray-700">Video & Cerita Interaktif Sesuai Gaya Belajarmu</p>
                 <h1 className="text-2xl sm:text-3xl leading-tightest md:text-4xl max-sm:text-center lg:text-5xl font-bold text-gray-900">
                   <span className="text-primary">
-                    Belajar Lebih <br /> <span className="font-black text-black">MENYENANGKAN</span>
+                    Belajar Lebih <br /> <span className="font-black text-black">MENYENANGKAN!</span>
                   </span>
                 </h1>
 
@@ -80,7 +80,7 @@ export default function Home() {
                   <span className="text-primary">Tentang Pintaru</span>
                 </h1>
 
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed">Jawab.in adalah platform pembelajaran inovatif yang menggabungkan kekuatan AI dengan pendekatan visual untuk membantu siswa memahami pelajaran dengan lebih baik. Dengan teknologi AI canggih, kami dapat memberikan penjelasan yang disesuaikan dengan gaya belajar setiap siswa, dilengkapi dengan video pembelajaran yang interaktif dan mudah dipahami.</p>
+                <p className="text-base sm:text-lg text-gray-700 leading-relaxed">Pintaru adalah platform pembelajaran inovatif yang menggabungkan kekuatan AI dengan pendekatan visual untuk membantu siswa memahami pelajaran dengan lebih baik. Dengan teknologi AI canggih, kami dapat memberikan penjelasan yang disesuaikan dengan gaya belajar setiap siswa, dilengkapi dengan video pembelajaran yang interaktif dan mudah dipahami.</p>
 
                 <div className="relative inline-block">
                   <Button asChild size="lg" className="px-6 sm:px-8 bg-primary-blue md:px-10 py-4 md:py-6 text-lg sm:text-xl md:text-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl">

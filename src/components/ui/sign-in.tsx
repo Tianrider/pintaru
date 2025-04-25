@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { login } from '@/app/actions/auth';
 import { toast } from 'sonner';
@@ -41,14 +41,13 @@ function SignInPage() {
 
   return (
     <div className="w-full px-8 md:px-12 items-center sm:justify-center">
-      <form action={clientAction} className="w-full max-w-md mx-auto">
+      <form action={clientAction} className="w-full border rounded-lg max-w-md mx-auto">
         <Card className="w-full sm:w-full border-none shadow-none">
-          <CardHeader className="space-y-3">
-            <div className="mx-auto flex justify-center mb-6">
-              <Image src="/logo-small.svg" alt="Jawab.in Logo" width={64} height={64} priority />
+          <CardHeader className="">
+            <div className="mx-auto flex justify-center mb-3">
+              <Image src="/logo-expand.svg" className="w-1/2" alt="Jawab.in Logo" width={300} height={300} priority />
             </div>
-            <CardTitle className="text-2xl font-bold text-center">Sign in to Jawab.in</CardTitle>
-            <CardDescription className="text-center text-sm opacity-80">Welcome back! Please sign in to continue</CardDescription>
+            <CardTitle className="text-2xl font-bold text-center text-primary-blue">Masuk ke Akun PINTARU</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-y-5 pt-4">
             <div className="relative group">
