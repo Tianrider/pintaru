@@ -14,7 +14,7 @@ export interface VideoDataType {
 }
 
 export interface SubjectOption {
-	label: string;
-	value: string;
-	[key: string]: string; // Add index signature to match Option type
+  label: string;
+  value: string;
+  [key: string]: string; // Add index signature to match Option type
 }
