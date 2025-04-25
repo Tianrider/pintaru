@@ -1,7 +1,7 @@
 export interface VideoDataType {
 	id: number;
 	title: string;
-	description?: string;
+	prompt: string;
 	video_url: string;
 	thumbnail_url?: string;
 	subject: string;

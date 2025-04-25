@@ -101,7 +101,7 @@ export default function Navbar() {
 	return (
 		<>
 			{/* Desktop Navbar */}
-			<nav className="bg-white px-4 sm:px-8 md:px-12 py-2 hidden sm:block sticky top-0 border-b border-b-[#F5F5F5] shadow-md z-20">
+			<nav className="bg-white px-4 sm:px-8 md:px-12 py-2 hidden sm:block fixed w-full top-0 border-b border-b-[#F5F5F5] shadow-md z-20">
 				<div className="flex items-center justify-between">
 					<Link href="/">
 						<img
@@ -121,7 +121,7 @@ export default function Navbar() {
 									item.path === "/dashboard"
 										? pathname === "/dashboard"
 										: item.path !== "/auth/logout" &&
-										  pathname.startsWith(item.path)
+										  pathname === item.path
 								}
 							/>
 						))}

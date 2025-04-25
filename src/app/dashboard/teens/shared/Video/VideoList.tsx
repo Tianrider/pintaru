@@ -44,7 +44,7 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
 			const tempVideo: VideoDataType = {
 				id: Date.now(),
 				title: prompt,
-				description: "Generating video...",
+				prompt: "Generating video...",
 				video_url: "",
 				subject: "Processing",
 				created_at: new Date().toISOString(),
@@ -187,7 +187,7 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
 				</div>
 
 				{totalPages > 1 && (
-					<div className="flex justify-center mt-8">
+					<div className="flex justify-center my-8">
 						<Pagination
 							color="#d9a821"
 							total={totalPages}

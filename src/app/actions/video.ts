@@ -73,3 +73,33 @@ export async function generateVideo(prompt: string, image?: File) {
 		throw error;
 	}
 }
+
+export async function getVideoById(id: string) {
+	try {
+		const supabase = await createClient();
+
+		const {data, error} = await supabase
+			.from("videos")
+			.select("*")
+			.eq("id", id);
+
+		if (error) {
+			console.error("Error fetching video:", error);
+			return {
+				success: false,
+				error: error.message,
+			};
+		}
+
+		return {
+			success: true,
+			video: data[0],
+		};
+	} catch (error) {
+		console.error("Error fetching video:", error);
+		return {
+			success: false,
+			error: "An unexpected error occurred while fetching the video",
+		};
+	}
+}

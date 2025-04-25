@@ -6,6 +6,7 @@ import {Progress} from "@mantine/core";
 import {createClient} from "@/utils/supabase/client";
 import Image from "next/image";
 import {useQueryClient} from "@tanstack/react-query";
+import {useRouter} from "next/navigation";
 
 interface VideoCardProps {
 	videoData: VideoDataType;
@@ -167,8 +168,13 @@ export default function VideoCard({videoData}: VideoCardProps) {
 	const cardClasses =
 		"bg-white rounded-xl shadow-sm p-4 border-[1px] flex flex-col hover:shadow-md transition-all duration-200 relative overflow-hidden group";
 
+	const router = useRouter();
+
 	return (
-		<div className={`${cardClasses} h-auto min-h-[18rem] md:h-72`}>
+		<div
+			className={`${cardClasses} h-auto min-h-[18rem] md:h-72 cursor-pointer`}
+			onClick={() => router.push(`/dashboard/teens/video/${id}`)}
+		>
 			<div
 				className="relative w-full rounded-lg overflow-hidden bg-gray-100"
 				style={{paddingTop: "56.25%"}}
@@ -203,14 +209,15 @@ export default function VideoCard({videoData}: VideoCardProps) {
 						<div className="text-xs text-gray-400">{progress}%</div>
 					</div>
 				) : (
-					<video
-						className="absolute inset-0 w-full h-full"
-						controls
-						poster={thumbnail_url || undefined}
-					>
-						<source src={videoUrl || video_url} type="video/mp4" />
-						Your browser does not support the video tag.
-					</video>
+					<Image
+						src={thumbnail_url || ""}
+						alt={title}
+						className={`w-full h-full object-cover absolute inset-0 rounded-lg ${
+							!videoReady ? "opacity-50" : ""
+						}`}
+						width={500}
+						height={281}
+					/>
 				)}
 			</div>
 
