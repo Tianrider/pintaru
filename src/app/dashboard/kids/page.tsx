@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createStorybook } from '@/app/actions/storybook/storybook';
 import Image from 'next/image';
 import { User } from 'lucide-react';
+import { useUser } from '@/app/hooks/useUser';
 
 type StoryImages = {
   cover: string | null;
@@ -20,6 +21,7 @@ type StoryImages = {
 };
 
 export default function KidsDashboard() {
+  const { user, isLoading } = useUser();
   const [tema, setTema] = useState('');
   const [karakter, setKarakter] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -67,26 +69,38 @@ export default function KidsDashboard() {
 
   return (
     <>
-      <div className="bg-amber-50 p-4 rounded-lg mb-6">
+      <div className="bg-amber-50 p-8 rounded-lg mb-6">
         <div className="flex items-center gap-4 mb-3">
-          <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-            <User size={32} className="text-gray-600" />
+          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+            <User size={32} className="text-gray-400" />
           </div>
           <div>
-            <h2 className="text-xl font-bold">Halo, Nama Kamu!</h2>
-            <p className="text-gray-600 text-sm">namakamu@gmail.com</p>
+            {isLoading ? (
+              <div>
+                <div className="h-5 w-32 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-4 w-40 bg-gray-200 mt-1 rounded animate-pulse"></div>
+              </div>
+            ) : (
+              <>
+                <h2 className="text-xl font-bold">Halo, {user?.user_metadata?.full_name || 'User'}!</h2>
+                <p className="text-gray-600 text-sm">{user?.email || 'email@example.com'}</p>
+              </>
+            )}
           </div>
         </div>
-        
-        <div className="relative">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-amber-600 font-medium text-sm">Quest hari ini</span>
-          </div>
+
+        <div className="relative mt-6">
           <div className="bg-amber-200 h-3 rounded-full overflow-hidden w-full">
             <div className="bg-amber-400 h-full rounded-full w-3/4"></div>
           </div>
-          <div className="absolute right-0 -top-1">
+          <div className="absolute right-0 top-4">
             <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded">XP</span>
+          </div>
+          <div className="absolute right-8 top-4">
+            <span className="text-blue-600 text-sm font-bold px-2 py-0.5 rounded">900/1200</span>
+          </div>
+          <div className="mt-1">
+            <span className="text-amber-600 font-bold text-sm">Quest hari ini</span>
           </div>
         </div>
       </div>
