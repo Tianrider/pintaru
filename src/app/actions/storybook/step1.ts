@@ -1,38 +1,38 @@
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-	apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-	dangerouslyAllowBrowser: true,
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true,
 });
 
 export async function executeStep1(tema: string, character: string) {
-	try {
-		const userPrompt = `Tema: ${tema}
+  try {
+    const userPrompt = `Tema: ${tema}
 Karakter utama: ${character}`;
 
-		const response = await openai.chat.completions.create({
-			model: 'gpt-4.5-preview-2025-02-27',
-			messages: [
-				{ role: 'system', content: systemPrompt },
-				{ role: 'user', content: userPrompt },
-			],
-			temperature: 1.0,
-			max_tokens: 2048,
-			top_p: 1.0,
-			stream: false,
-		});
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4.5-preview-2025-02-27',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      temperature: 1.0,
+      max_tokens: 2048,
+      top_p: 1.0,
+      stream: false,
+    });
 
-		return {
-			success: true,
-			data: response.choices[0].message.content,
-		};
-	} catch (error) {
-		console.error('Error executing step 1:', error);
-		return {
-			success: false,
-			error: error instanceof Error ? error.message : 'Unknown error',
-		};
-	}
+    return {
+      success: true,
+      data: response.choices[0].message.content,
+    };
+  } catch (error) {
+    console.error('Error executing step 1:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
 }
 
 const systemPrompt = `Anda adalah seorang **pendongeng** yang familiar dengan bagaimana cara anak kecil membaca dan memahami teks dan visual cerita pendek untuk mendapatkan nilai moralnya. Tujuan utama Anda adalah untuk membuat sebuah buku cerita pendek bergambar yang terdiri dari 10 halaman cerita landscape (1 paragraf per halaman) dan 1 halaman cover landscape, menceritakan sebuah tokoh berdasarkan keinginan pengguna, di mana cerita tersebut berisi pesan moral berdasarkan keinginan pengguna juga. Anda akan melakukannya dengan prompt chaining secara bertahap. Saya akan memberikan instruksi dan detail lengkapnya berikut ini.

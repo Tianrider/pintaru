@@ -1,67 +1,67 @@
 import OpenAI, { toFile } from 'openai';
 
 const openai = new OpenAI({
-	apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-	dangerouslyAllowBrowser: true,
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true,
 });
 
 export async function executeStep12(textCerita: string, imageBase64?: string) {
-	try {
-		const prompt = createCoverPrompt(textCerita);
+  try {
+    const prompt = createCoverPrompt(textCerita);
 
-		let response;
+    let response;
 
-		if (imageBase64) {
-			// Convert base64 to buffer
-			const imageBuffer = Buffer.from(imageBase64, 'base64');
+    if (imageBase64) {
+      // Convert base64 to buffer
+      const imageBuffer = Buffer.from(imageBase64, 'base64');
 
-			// Convert buffer to File object using OpenAI's toFile utility
-			const imageFile = await toFile(imageBuffer, 'input-image.png', {
-				type: 'image/png',
-			});
+      // Convert buffer to File object using OpenAI's toFile utility
+      const imageFile = await toFile(imageBuffer, 'input-image.png', {
+        type: 'image/png',
+      });
 
-			// Use images.edit when we have an input image
-			response = await openai.images.edit({
-				model: 'gpt-image-1',
-				image: imageFile,
-				prompt,
-				size: '1536x1024' as unknown as '1024x1024',
-				quality: 'high',
-			});
-		} else {
-			// Use images.generate when no input image is provided
-			response = await openai.images.generate({
-				model: 'gpt-image-1',
-				prompt,
-				size: '1536x1024' as unknown as '1024x1024',
-				quality: 'high',
-			});
-		}
+      // Use images.edit when we have an input image
+      response = await openai.images.edit({
+        model: 'gpt-image-1',
+        image: imageFile,
+        prompt,
+        size: '1536x1024' as unknown as '1024x1024',
+        quality: 'high',
+      });
+    } else {
+      // Use images.generate when no input image is provided
+      response = await openai.images.generate({
+        model: 'gpt-image-1',
+        prompt,
+        size: '1536x1024' as unknown as '1024x1024',
+        quality: 'high',
+      });
+    }
 
-		const image_base64 = response.data?.[0]?.b64_json;
+    const image_base64 = response.data?.[0]?.b64_json;
 
-		if (!image_base64) {
-			return {
-				success: false,
-				error: 'No image data received from API',
-			};
-		}
+    if (!image_base64) {
+      return {
+        success: false,
+        error: 'No image data received from API',
+      };
+    }
 
-		return {
-			success: true,
-			data: image_base64,
-		};
-	} catch (error) {
-		console.error('Error executing step 12:', error);
-		return {
-			success: false,
-			error: error instanceof Error ? error.message : 'Unknown error',
-		};
-	}
+    return {
+      success: true,
+      data: image_base64,
+    };
+  } catch (error) {
+    console.error('Error executing step 12:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
 }
 
 function createCoverPrompt(textCerita: string): string {
-	return `Anda adalah seorang **pendongeng** yang familiar dengan bagaimana cara anak kecil membaca dan memahami teks dan visual cerita pendek untuk mendapatkan nilai moralnya. Tujuan utama Anda adalah untuk membuat sebuah buku cerita pendek bergambar yang terdiri dari 10 halaman cerita landscape (1 paragraf per halaman) dan 1 halaman cover landscape, menceritakan sebuah tokoh berdasarkan keinginan pengguna, di mana cerita tersebut berisi pesan moral berdasarkan keinginan pengguna juga. Anda akan melakukannya dengan prompt chaining secara bertahap. Saya akan memberikan instruksi dan detail lengkapnya berikut ini.
+  return `Anda adalah seorang **pendongeng** yang familiar dengan bagaimana cara anak kecil membaca dan memahami teks dan visual cerita pendek untuk mendapatkan nilai moralnya. Tujuan utama Anda adalah untuk membuat sebuah buku cerita pendek bergambar yang terdiri dari 10 halaman cerita landscape (1 paragraf per halaman) dan 1 halaman cover landscape, menceritakan sebuah tokoh berdasarkan keinginan pengguna, di mana cerita tersebut berisi pesan moral berdasarkan keinginan pengguna juga. Anda akan melakukannya dengan prompt chaining secara bertahap. Saya akan memberikan instruksi dan detail lengkapnya berikut ini.
 
 **INSTRUKSI:**
 Buatlah buku cerita pendek yang mengutamakan visual gambar yang menarik bagi anak balita secara step by step. Sekarang, Anda akan mengerjakan langkah nomor 12:
