@@ -1,6 +1,7 @@
 import { executeStep1 } from './step1';
 import { executeStepN } from './stepN';
 import { executeStep12 } from './step12';
+import { saveStorybook } from '../books';
 
 type ProgressStatus = {
   step: number;
@@ -261,6 +262,43 @@ export async function createStorybook(tema: string, character: string, onProgres
     completed: true,
     data: image0.success ? { page: 'cover' } : undefined,
   });
+
+  // Before the final return, add the saveStorybook call:
+  if (image0.success && teksCerita.data) {
+    // Extract title from the story text - first line or first sentence
+    const storyLines = teksCerita.data.split('\n').filter((line) => line.trim().length > 0);
+    let title = storyLines[0] || 'Untitled Story';
+
+    // If the title is too long, truncate it
+    if (title.length > 100) {
+      title = title.substring(0, 97) + '...';
+    }
+
+    // Save the book to the database
+    try {
+      const saveResult = await saveStorybook({
+        title,
+        theme: tema,
+        cover: image0.data!,
+        image1: image1.success ? image1.data : undefined,
+        image2: image2.success ? image2.data : undefined,
+        image3: image3.success ? image3.data : undefined,
+        image4: image4.success ? image4.data : undefined,
+        image5: image5.success ? image5.data : undefined,
+        image6: image6.success ? image6.data : undefined,
+        image7: image7.success ? image7.data : undefined,
+        image8: image8.success ? image8.data : undefined,
+        image9: image9.success ? image9.data : undefined,
+        image10: image10.success ? image10.data : undefined,
+      });
+
+      if (!saveResult.success) {
+        console.error('Failed to save storybook:', saveResult.error);
+      }
+    } catch (error) {
+      console.error('Error saving storybook:', error);
+    }
+  }
 
   return {
     success: true,
