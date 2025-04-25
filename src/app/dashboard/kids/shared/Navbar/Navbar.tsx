@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import cn from 'classnames';
 
 import { FC, useState, useEffect } from 'react';
-import { Home, LogOut, User, Menu, X } from 'lucide-react';
+import { Home, LogOut, User, Menu, X, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
 const navItems = [
@@ -13,6 +13,11 @@ const navItems = [
     icon: Home,
     label: 'Dashboard',
     path: '/dashboard/kids',
+  },
+  {
+    icon: BookOpen,
+    label: 'Community',
+    path: '/dashboard/kids/community',
   },
   {
     icon: User,
@@ -104,4 +109,4 @@ export default function Navbar() {
       )}
     </>
   );
-} 
+}

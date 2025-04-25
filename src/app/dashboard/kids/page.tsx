@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 'use client';
 
 import { useState } from 'react';
@@ -204,12 +205,13 @@ export default function KidsDashboard() {
           <Image src="/book.svg" alt="Book icon" width={60} height={60} className="text-white absolute top-1/2 -translate-y-1/2 left-0 mt-0.5" />
           <h2 className="text-white text-lg pl-18 font-semibold">Temukan Cerita Baru dari Komunitas Lainnya!</h2>
         </div>
-        <button className="bg-[#2d63bb] hover:bg-blue-800 text-white pl-4 pr-3 py-2 rounded-full flex items-center gap-1">
+        <a className="bg-[#2d63bb] hover:bg-blue-800 text-white pl-4 pr-3 py-2 rounded-full flex items-center gap-1"
+        href='/dashboard/kids/community'>
           <p className="font-bold">Lihat Semua</p>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <path d="m9 18 6-6-6-6" />
           </svg>
-        </button>
+        </a>
       </div>
 
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

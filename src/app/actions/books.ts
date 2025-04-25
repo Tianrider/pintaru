@@ -111,3 +111,31 @@ export async function saveStorybook(storyData: { title: string; theme: string; c
     };
   }
 }
+
+export async function getAllBooks() {
+  try {
+    const supabase = await createClient();
+
+    // Fetch all books ordered by creation date, latest first
+    const { data, error } = await supabase.from('books').select('*').order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching community books:', error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      books: data,
+    };
+  } catch (error) {
+    console.error('Error fetching community books:', error);
+    return {
+      success: false,
+      error: 'An unexpected error occurred while fetching community books',
+    };
+  }
+}
