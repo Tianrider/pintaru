@@ -139,3 +139,31 @@ export async function getAllBooks() {
     };
   }
 }
+
+export async function getBookById(id: string | number) {
+  try {
+    const supabase = await createClient();
+
+    // Fetch the specific book by id
+    const { data, error } = await supabase.from('books').select('*').eq('id', id).single();
+
+    if (error) {
+      console.error('Error fetching book:', error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      book: data,
+    };
+  } catch (error) {
+    console.error('Error fetching book:', error);
+    return {
+      success: false,
+      error: 'An unexpected error occurred while fetching the book',
+    };
+  }
+}

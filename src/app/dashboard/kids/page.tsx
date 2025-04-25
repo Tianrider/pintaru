@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { User } from 'lucide-react';
 import { useUser } from '@/app/hooks/useUser';
 import { useBooks } from '@/app/hooks/useBooks';
+import Link from 'next/link';
 
 type StoryImages = {
   cover: string | null;
@@ -232,7 +233,7 @@ export default function KidsDashboard() {
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
-            <div key={book.id} className="bg-white rounded-lg overflow-hidden shadow-md">
+            <Link href={`/dashboard/kids/storybook/${book.id}`} key={book.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
               <div className="relative pb-[66.67%]">
                 <Image src={book.cover} alt={book.title || 'Storybook cover'} fill className="object-cover" />
               </div>
@@ -256,7 +257,7 @@ export default function KidsDashboard() {
                   })}
                 </p>
               </div>
-            </div>
+            </Link>
           ))
         ) : isLoadingBooks ? (
           // Loading state

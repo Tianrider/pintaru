@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useCommunityBooks } from '@/app/hooks/useCommunityBooks';
+import Link from 'next/link';
 
 export default function CommunityPage() {
   const { books, isLoading } = useCommunityBooks();
@@ -35,7 +36,7 @@ export default function CommunityPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
-            <div key={book.id} className="bg-white rounded-lg overflow-hidden shadow-md">
+            <Link href={`/dashboard/kids/storybook/${book.id}`} key={book.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
               <div className="relative pb-[66.67%]">
                 <Image src={book.cover} alt={book.title || 'Storybook cover'} fill className="object-cover" />
               </div>
@@ -59,7 +60,7 @@ export default function CommunityPage() {
                   })}
                 </p>
               </div>
-            </div>
+            </Link>
           ))
         ) : isLoading ? (
           // Loading state
