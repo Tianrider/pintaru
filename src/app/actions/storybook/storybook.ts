@@ -96,7 +96,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image2 = await executeStepN(3, teksCerita.data);
+	const image2 = await executeStepN(
+		3,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 3,
@@ -116,7 +120,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image3 = await executeStepN(4, teksCerita.data);
+	const image3 = await executeStepN(
+		4,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 4,
@@ -136,7 +144,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image4 = await executeStepN(5, teksCerita.data);
+	const image4 = await executeStepN(
+		5,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 5,
@@ -156,7 +168,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image5 = await executeStepN(6, teksCerita.data);
+	const image5 = await executeStepN(
+		6,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 6,
@@ -176,7 +192,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image6 = await executeStepN(7, teksCerita.data);
+	const image6 = await executeStepN(
+		7,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 7,
@@ -196,7 +216,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image7 = await executeStepN(8, teksCerita.data);
+	const image7 = await executeStepN(
+		8,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 8,
@@ -216,7 +240,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image8 = await executeStepN(9, teksCerita.data);
+	const image8 = await executeStepN(
+		9,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 9,
@@ -236,7 +264,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image9 = await executeStepN(10, teksCerita.data);
+	const image9 = await executeStepN(
+		10,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 10,
@@ -256,7 +288,11 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image10 = await executeStepN(11, teksCerita.data);
+	const image10 = await executeStepN(
+		11,
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 11,
@@ -276,7 +312,10 @@ export async function createStorybook(
 		completed: false,
 	});
 
-	const image0 = await executeStep12(teksCerita.data);
+	const image0 = await executeStep12(
+		teksCerita.data,
+		image1.success ? image1.data : undefined
+	);
 
 	onProgress?.({
 		step: 12,

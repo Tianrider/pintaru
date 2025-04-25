@@ -1,4 +1,8 @@
-import OpenAI from 'openai';
+'use server';
+
+import OpenAI, { toFile } from 'openai';
+import fs from 'fs';
+import path from 'path';
 import {
 	userPrompt2,
 	userPrompt3,
@@ -12,11 +16,17 @@ import {
 	userPrompt11,
 } from './promptStepN';
 
+// Make sure we're using the API key from server environment
 const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
+	apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+	dangerouslyAllowBrowser: true,
 });
 
-export async function executeStepN(n: number, textCerita: string) {
+export async function executeStepN(
+	n: number,
+	textCerita: string,
+	imageBase64?: string
+) {
 	try {
 		let prompt = '';
 		switch (n) {
@@ -57,10 +67,69 @@ export async function executeStepN(n: number, textCerita: string) {
 				};
 		}
 
-		const response = await openai.images.generate({
-			model: 'gpt-image-1',
-			prompt,
-		});
+		let response;
+
+		if (imageBase64) {
+			// Convert base64 to buffer
+			const imageBuffer = Buffer.from(imageBase64, 'base64');
+
+			// Convert buffer to File object using OpenAI's toFile utility
+			const imageFile = await toFile(imageBuffer, 'input-image.png', {
+				type: 'image/png',
+			});
+
+			// Read the layout wireframe image
+			const wireframePath = path.join(
+				process.cwd(),
+				'src',
+				'app',
+				'actions',
+				'storybook',
+				'layout-wireframe.png'
+			);
+			const wireframeFile = await toFile(
+				fs.createReadStream(wireframePath),
+				'layout-wireframe.png',
+				{
+					type: 'image/png',
+				}
+			);
+
+			// Use images.edit with both images
+			response = await openai.images.edit({
+				model: 'gpt-image-1',
+				image: [wireframeFile, imageFile],
+				prompt,
+				size: '1536x1024' as unknown as '1024x1024',
+				quality: 'high',
+			});
+		} else {
+			// If no image from previous step, just read the layout wireframe
+			const wireframePath = path.join(
+				process.cwd(),
+				'src',
+				'app',
+				'actions',
+				'storybook',
+				'layout-wireframe.png'
+			);
+			const wireframeFile = await toFile(
+				fs.createReadStream(wireframePath),
+				'layout-wireframe.png',
+				{
+					type: 'image/png',
+				}
+			);
+
+			// Use images.edit with just the wireframe
+			response = await openai.images.edit({
+				model: 'gpt-image-1',
+				image: wireframeFile,
+				prompt,
+				size: '1536x1024' as unknown as '1024x1024',
+				quality: 'high',
+			});
+		}
 
 		const image_base64 = response.data?.[0]?.b64_json;
 
@@ -71,11 +140,9 @@ export async function executeStepN(n: number, textCerita: string) {
 			};
 		}
 
-		const image_bytes = Buffer.from(image_base64, 'base64');
-
 		return {
 			success: true,
-			data: image_bytes,
+			data: image_base64,
 		};
 	} catch (error) {
 		console.error(`Error executing step ${n}:`, error);
