@@ -65,12 +65,12 @@ export default function BookPage({ params }: { params: { id: string } }) {
   return (
     <div className="pb-12">
       {/* Navigation bar */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 relative">
         <Link href="/dashboard/kids" className="inline-flex items-center text-gray-600 hover:text-gray-900">
           <ArrowLeft className="mr-1" size={18} />
           Back to Dashboard
         </Link>
-        <h1 className="text-2xl font-bold">{book.title || 'Untitled Storybook'}</h1>
+        <h1 className="text-3xl font-bold absolute left-1/2 -translate-x-1/2">{book.title || 'Untitled Storybook'}</h1>
         <div className="flex gap-2">
           {book.theme?.split(',').map((theme, index) => (
             <span key={index} className="bg-amber-100 text-amber-600 border-amber-600 border text-xs px-2 py-0.5 rounded-full">
@@ -95,14 +95,14 @@ export default function BookPage({ params }: { params: { id: string } }) {
 
         {/* Navigation arrows */}
         {currentImageIndex > 0 && (
-          <button onClick={goToPrevImage} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100" aria-label="Previous page">
-            <ChevronLeft size={24} />
+          <button onClick={goToPrevImage} className="absolute left-4 top-1/2 -translate-y-1/2 bg-[#eba92d] rounded-full p-3 shadow-lg hover:bg-amber-600" aria-label="Previous page">
+            <ChevronLeft size={24} className='text-white'/>
           </button>
         )}
 
         {currentImageIndex < images.length - 1 && (
-          <button onClick={goToNextImage} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100" aria-label="Next page">
-            <ChevronRight size={24} />
+          <button onClick={goToNextImage} className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#eba92d] rounded-full p-3 shadow-lg hover:bg-amber-600" aria-label="Next page">
+            <ChevronRight size={24} className='text-white'/>
           </button>
         )}
       </div>
