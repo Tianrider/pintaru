@@ -244,7 +244,7 @@ export default function Chat({ imageData, timestamp }: ChatProps) {
   return (
     <div className="flex flex-col h-full w-full relative mx-auto">
       <p className="font-bold text-3xl mb-4 px-6 py-4">Live Chat</p>
-      <div className="overflow-y-auto h-full flex flex-col gap-4 pb-20 px-6">
+      <div className="overflow-y-auto h-[70vh] flex flex-col gap-4 pb-20 px-6">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`whitespace-pre-wrap p-4 rounded-lg max-w-[80%] ${message.role === 'user' ? 'bg-blue-300/50 rounded-tr-none' : 'bg-gray-100 border border-gray-200 rounded-tl-none'}`}>
@@ -299,13 +299,27 @@ export default function Chat({ imageData, timestamp }: ChatProps) {
           </div>
         ))}
 
-        {/* Skeleton loader only when processing image inputs */}
+        {/* Enhanced skeleton loader for image processing */}
         {isLoading && imageUrl && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 border border-gray-200 rounded-lg rounded-tl-none p-4 w-[80%] animate-pulse">
-              <div className="h-4 bg-gray-300 rounded-full w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-300 rounded-full w-1/2 mb-2"></div>
-              <div className="h-4 bg-gray-300 rounded-full w-5/6"></div>
+            <div className="bg-gray-100 border border-gray-200 rounded-lg rounded-tl-none p-4 w-[80%]">
+              <div className="flex items-center space-x-2 mb-3">
+                <div className="h-6 w-6 bg-gray-300 rounded-full animate-pulse"></div>
+                <div className="h-4 bg-gray-300 rounded-full w-24 animate-pulse"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-300 rounded-full w-3/4 animate-pulse"></div>
+                <div className="h-4 bg-gray-300 rounded-full w-1/2 animate-pulse"></div>
+                <div className="h-4 bg-gray-300 rounded-full w-5/6 animate-pulse"></div>
+                <div className="h-4 bg-gray-300 rounded-full w-2/3 animate-pulse"></div>
+              </div>
+              {imageUrl && (
+                <div className="mt-3 h-32 bg-gray-300 rounded-md w-3/4 animate-pulse flex items-center justify-center">
+                  <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -330,12 +344,19 @@ export default function Chat({ imageData, timestamp }: ChatProps) {
 
       <form onSubmit={handleFormSubmit} className="w-full absolute bottom-0 p-3 bg-white border-t">
         <div className="flex gap-2">
-          <input id="chat-input" className="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={input} placeholder={isProcessing ? 'Processing image...' : imagePreview ? `Ask about video at ${timestamp || 'current position'}...` : 'Type a message...'} onChange={handleInputChange} />
+          <input id="chat-input" className="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={input} placeholder={isProcessing ? 'Processing image...' : imagePreview ? `Ask about video at ${timestamp || 'current position'}...` : 'Type a message...'} onChange={handleInputChange} disabled={isProcessing} />
           <button type="submit" className="p-3 px-5 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled={isLoading || isProcessing || (!input.trim() && !imageUrl)}>
             {isLoading ? 'Sending...' : 'Send'}
           </button>
         </div>
-        {isProcessing && <div className="text-xs text-center mt-2 text-zinc-500">Optimizing image...</div>}
+        {isProcessing && (
+          <div className="flex items-center justify-center mt-2 space-x-1">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            <span className="text-xs text-blue-500 ml-2">Processing image...</span>
+          </div>
+        )}
       </form>
     </div>
   );

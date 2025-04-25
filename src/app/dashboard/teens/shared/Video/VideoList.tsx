@@ -9,14 +9,18 @@ import { useQueryClient, useQuery } from '@tanstack/react-query';
 import type { VideoDataType } from '@/types/video-types';
 import type { Option } from '@/components/ui/multiselect';
 import VideoCard from './video-card';
-import { getUserVideos } from '@/app/actions/video';
+import { getUserVideos, getVideoByUser } from '@/app/actions/video';
 import VideoSkeleton from './video-skeleton';
 
 export type VideoListRef = {
   addTemporaryVideo: (prompt: string) => void;
 };
 
-const VideoList = forwardRef<VideoListRef>((props, ref) => {
+interface VideoListProps {
+  isCommunity?: boolean;
+}
+
+const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = false }, ref) => {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [selectedSubjects, setSelectedSubjects] = useState<Option[]>([]);
@@ -26,7 +30,14 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
   const { data, isLoading, error } = useQuery<VideoDataType[]>({
     queryKey: ['videos'],
     queryFn: async () => {
-      const response = await getUserVideos();
+      let response;
+      if (isCommunity) {
+        response = await getUserVideos();
+      } else {
+        response = await getVideoByUser();
+      }
+
+      // const response = await getUserVideos();
       if (!response.videos) {
         return [];
       }
@@ -105,9 +116,11 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
 
   return (
     <div className="mt-8 gap-5 flex flex-col">
-      <div className="flex justify-between items-center">
-        <GroupHeader title="Temukan Video Baru Dari dari Komunitas Lainnya" />
-      </div>
+      {!isCommunity && (
+        <div className="flex justify-between items-center">
+          <GroupHeader title="Temukan Video Baru Dari dari Komunitas Lainnya" />
+        </div>
+      )}
       <div className="flex gap-4 max-w-4xl mx-auto w-full flex-wrap md:flex-nowrap">
         <div className="w-full md:w-[70%] relative h-12">
           <Input placeholder="Cari Videomu.." className="rounded-full h-full px-11 border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 focus:border-secondary-yellow text-base" value={search} onChange={handleSearch} />
