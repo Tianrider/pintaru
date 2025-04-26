@@ -148,9 +148,8 @@ const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = fals
               <VideoSkeleton />
             </>
           ) : error ? (
-            <div className="col-span-3 text-center text-red-500 py-10 bg-red-50 rounded-lg border border-red-100">
-              <p className="font-medium">Failed to load videos</p>
-              <p className="text-sm text-red-400 mt-1">Please try again later</p>
+            <div className="col-span-3 text-center py-10 bg-red-50 rounded-lg border border-red-100">
+              <p className="font-medium">You have no video yet, Generate Now!</p>
             </div>
           ) : paginatedVideos.length === 0 ? (
             <div className="col-span-3 text-center text-gray-500 py-10 bg-gray-50 rounded-lg border border-gray-100">
