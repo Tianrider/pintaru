@@ -8,10 +8,9 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Home, ArrowLeft } from 'lucide-react';
 import { useBook } from '@/app/hooks/useBook';
 
-export default function BookPage({ params }: { params: { id: string } }) {
+export default function BookPage({ params }: { params: Promise<{ id: string }> }) {
   // Unwrap params using React.use()
-  const unwrappedParams = React.use(params);
-  const bookId = unwrappedParams.id;
+  const { id: bookId } = React.use(params);
 
   const { book, isLoading, error } = useBook(bookId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -98,13 +97,13 @@ export default function BookPage({ params }: { params: { id: string } }) {
         {/* Navigation arrows */}
         {currentImageIndex > 0 && (
           <button onClick={goToPrevImage} className="absolute left-4 top-1/2 -translate-y-1/2 bg-[#eba92d] rounded-full p-3 shadow-lg hover:bg-amber-600" aria-label="Previous page">
-            <ChevronLeft size={24} className='text-white'/>
+            <ChevronLeft size={24} className="text-white" />
           </button>
         )}
 
         {currentImageIndex < images.length - 1 && (
           <button onClick={goToNextImage} className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#eba92d] rounded-full p-3 shadow-lg hover:bg-amber-600" aria-label="Next page">
-            <ChevronRight size={24} className='text-white'/>
+            <ChevronRight size={24} className="text-white" />
           </button>
         )}
       </div>

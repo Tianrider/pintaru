@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBookById } from '@/app/actions/books';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ success: false, error: 'Book ID is required' }, { status: 400 });
