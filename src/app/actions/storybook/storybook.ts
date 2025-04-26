@@ -256,8 +256,13 @@ export async function createStorybook(tema: string, character: string, user_id: 
     if (imageUrls.image1) {
       try {
         console.log('[DATABASE] Updating book record with image1 URL');
-        await supabase.from('books').update({ image1: imageUrls.image1 }).eq('id', bookId);
-        console.log('[DATABASE] Book record updated with image1 URL');
+        const { data, error } = await supabase.from('books').update({ image1: imageUrls.image1 }).eq('id', bookId);
+
+        if (error) {
+          console.log('Error:', error);
+        }
+
+        console.log('[DATABASE] Book record updated with image1 URL', data);
       } catch (error) {
         console.error('[DATABASE ERROR] Error updating book with image1 URL:', error);
       }
