@@ -185,7 +185,13 @@ export default function VideoPage() {
                   ) : recommendedVideos.length > 0 ? (
                     <div className="grid grid-cols-3 gap-4">
                       {recommendedVideos.map((video) => (
-                        <div key={video.id} className="h-36 border flex flex-col gap-1 p-1 rounded-lg">
+                        <div
+                          key={video.id}
+                          className="h-36 border flex flex-col gap-1 p-1 rounded-lg cursor-pointer"
+                          onClick={() => {
+                            router.push(`/dashboard/teens/video/${video.id}`);
+                          }}
+                        >
                           <Image className="w-full rounded-lg" src={video.thumbnail_url || ''} alt={video.title} width={100} height={100} />
                           <p className="text-xs truncate">{video.title}</p>
                         </div>
