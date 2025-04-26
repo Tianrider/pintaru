@@ -2,13 +2,14 @@
 import { useUser } from '@/app/hooks/useUser';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useLocalStorage } from '@mantine/hooks';
 
 export default function ProfileSection() {
   const { user, isLoading } = useUser();
-
+  const [progress] = useLocalStorage({ key: 'progress', defaultValue: 0 });
   return (
-    <div className="-mx-3 -mt-7 lg:mx-0 lg:mt-0">
-      <div className="w-full relative px-8 pt-16 lg:pt-10 lg:pb-10 pb-8 lg:rounded-xl rounded-b-3xl lg:h-fit h-fit bg-primary-yellow">
+    <div className="-mx-3 -mt-10 lg:mx-0 lg:mt-8">
+      <div className="w-full gap-6 flex flex-col relative px-8 pt-16 lg:pt-10 lg:pb-10 pb-8 lg:rounded-xl rounded-b-3xl lg:h-fit h-fit bg-primary-yellow">
         <BoxLeft />
         <BoxTop />
         <div className="flex justify-between">
@@ -31,6 +32,14 @@ export default function ProfileSection() {
               )}
             </div>
           </div>
+        </div>
+        <div className="flex flex-col">
+          <div className="w-full h-2 relative flex items-center justify-between gap-2">
+            <div className="rounded-l-full bg-yellow-300 absolute left-0 h-full" style={{ width: `${(progress / 60) * 100}%` }}></div>
+            <div className="bg-yellow-700/50 rounded-full w-full h-2"></div>
+            <p className="text-white text-sm w-28 text-end font-bold">{progress} / 60 Menit</p>
+          </div>
+          <p className="text-white text-sm">Progress Hari Ini</p>
         </div>
       </div>
     </div>

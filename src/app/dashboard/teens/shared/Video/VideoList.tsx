@@ -9,14 +9,18 @@ import { useQueryClient, useQuery } from '@tanstack/react-query';
 import type { VideoDataType } from '@/types/video-types';
 import type { Option } from '@/components/ui/multiselect';
 import VideoCard from './video-card';
-import { getUserVideos } from '@/app/actions/video';
+import { getUserVideos, getVideoByUser } from '@/app/actions/video';
 import VideoSkeleton from './video-skeleton';
 
 export type VideoListRef = {
   addTemporaryVideo: (prompt: string) => void;
 };
 
-const VideoList = forwardRef<VideoListRef>((props, ref) => {
+interface VideoListProps {
+  isCommunity?: boolean;
+}
+
+const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = false }, ref) => {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [selectedSubjects, setSelectedSubjects] = useState<Option[]>([]);
@@ -26,7 +30,14 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
   const { data, isLoading, error } = useQuery<VideoDataType[]>({
     queryKey: ['videos'],
     queryFn: async () => {
-      const response = await getUserVideos();
+      let response;
+      if (isCommunity) {
+        response = await getUserVideos();
+      } else {
+        response = await getVideoByUser();
+      }
+
+      // const response = await getUserVideos();
       if (!response.videos) {
         return [];
       }
@@ -44,7 +55,7 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
       const tempVideo: VideoDataType = {
         id: Date.now(),
         title: prompt,
-        description: 'Generating video...',
+        prompt: 'Generating video...',
         video_url: '',
         subject: 'Processing',
         created_at: new Date().toISOString(),
@@ -105,19 +116,21 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
 
   return (
     <div className="mt-8 gap-5 flex flex-col">
-      <div className="flex justify-between items-center">
-        <GroupHeader title="Check Our Collection" />
-      </div>
+      {!isCommunity && (
+        <div className="flex justify-between items-center">
+          <GroupHeader title="Temukan Video Baru Dari dari Komunitas Lainnya" />
+        </div>
+      )}
       <div className="flex gap-4 max-w-4xl mx-auto w-full flex-wrap md:flex-nowrap">
         <div className="w-full md:w-[70%] relative h-12">
-          <Input placeholder="Search your videos..." className="rounded-full h-full px-11 border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 focus:border-secondary-yellow text-base" value={search} onChange={handleSearch} />
+          <Input placeholder="Cari Videomu.." className="rounded-full h-full px-11 border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 focus:border-secondary-yellow text-base" value={search} onChange={handleSearch} />
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center">
             <Search className="text-gray-400" size={18} />
           </div>
         </div>
         <div className="w-full md:w-[30%]">
           <div className="relative">
-            <MultiSelect placeholder="Filter by subjects" options={subjects} value={selectedSubjects} onChange={handleSubjectsChange} className="w-full rounded-full shadow-sm flex px-2 items-center hover:shadow-md transition-all duration-200 text-base h-auto min-h-12" badgeClassName="my-1" />
+            <MultiSelect placeholder="Pilih Mata Pelajaran" options={subjects} value={selectedSubjects} onChange={handleSubjectsChange} className="w-full rounded-full shadow-sm flex px-2 items-center hover:shadow-md transition-all duration-200 text-base h-auto min-h-12" badgeClassName="my-1" />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
                 <path d="m6 9 6 6 6-6" />
@@ -150,7 +163,7 @@ const VideoList = forwardRef<VideoListRef>((props, ref) => {
         </div>
 
         {totalPages > 1 && (
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center my-8">
             <Pagination
               color="#d9a821"
               total={totalPages}

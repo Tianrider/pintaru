@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import cn from 'classnames';
 
 import { FC, useState, useEffect } from 'react';
-import { Home, LogOut, User, Menu, X } from 'lucide-react';
+import { Home, LogOut, User, Menu, X, VideoIcon } from 'lucide-react';
 import Link from 'next/link';
 
 const navItems = [
@@ -13,6 +13,11 @@ const navItems = [
     icon: Home,
     label: 'Dashboard',
     path: '/dashboard/teens',
+  },
+  {
+    icon: VideoIcon,
+    label: 'Community',
+    path: '/dashboard/teens/community',
   },
   {
     icon: User,
@@ -72,14 +77,14 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Navbar */}
-      <nav className="bg-white px-4 sm:px-8 md:px-12 py-2 hidden sm:block sticky top-0 border-b border-b-[#F5F5F5] shadow-md z-20">
+      <nav className="bg-white px-4 sm:px-8 md:px-12 py-2 hidden sm:block fixed w-full top-0 border-b border-b-[#F5F5F5] shadow-md z-20">
         <div className="flex items-center justify-between">
           <Link href="/">
             <img src="/logo-expand.svg" alt="logo" className="h-7 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
             {navItems.map((item, index) => (
-              <NavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={item.path === '/dashboard' ? pathname === '/dashboard' : item.path !== '/auth/logout' && pathname.startsWith(item.path)} />
+              <NavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={item.path === '/dashboard' ? pathname === '/dashboard' : item.path !== '/auth/logout' && pathname === item.path} />
             ))}
           </div>
         </div>

@@ -11,32 +11,38 @@ export default function Home() {
         {/* Header Section */}
         <section className="min-h-screen flex flex-col">
           <div className="flex-1 flex flex-col items-center px-4 sm:px-8 md:px-16 lg:px-32 lg:py-24 lg:pb-32 bg-gradient-to-b justify-center py-8 md:py-12">
-            <div className="w-full flex flex-col md:flex-row gap-8 md:gap-12 items-center">
+            <div className="w-full flex flex-col-reverse md:flex-row-reverse gap-8 md:gap-12 items-center">
               <div className="w-full md:w-1/2 rounded-xl bg-white p-4 h-[250px] sm:h-[300px] md:h-[450px] flex items-center justify-center">
+                {/* <p className="text-gray-500 text-center px-4 text-sm sm:text-base">
+									[Ilustrasi interaktif menunjukkan siswa
+									mengakses video pembelajaran dengan AI
+									Jawab.in]
+								</p> */}
+                {/* <div className="rounded-lg border-2 border-gray-200 shadow-sm p-2"> */}
                 <MacbookPro src="/demo.gif" className="w-full h-full rounded-lg" />
                 {/* </div> */}
               </div>
 
               <div className="w-full md:w-1/2 space-y-2 sm:space-y-6">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl max-sm:text-center lg:text-5xl font-bold text-gray-900 leading-tight">
-                  <span className="text-primary ">Solusi Pelajar CERDAS!</span>
+                <p className="bg-primary-yellow/20 rounded-full w-fit px-4 py-1 text-gray-700">Video & Cerita Interaktif Sesuai Gaya Belajarmu</p>
+                <h1 className="text-2xl sm:text-3xl leading-tightest md:text-4xl max-sm:text-center lg:text-5xl font-bold text-gray-900">
+                  <span className="text-primary">
+                    Belajar Lebih <br /> <span className="font-black text-black">MENYENANGKAN!</span>
+                  </span>
                 </h1>
 
-                <h2 className="text-lg sm:text-xl md:text-2xl font-semibold max-sm:text-center text-gray-800">Ubah Pertanyaanmu Jadi Video Pembelajaran Interaktif</h2>
+                <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-sm:text-center lg:w-xl">Dengan PINTARU, cukup ketik atau unggah soal, dan kamu akan langsung mendapatkan penjelasan visual berbentuk video atau cerita interaktif.Cocok untuk anak-anak, pelajar, dan siapa pun yang ingin belajar dengan cara yang berbeda.</p>
 
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-sm:text-center lg:w-xl">Ketik soal Anda, ambil foto, atau unggah PDF materi, AI Jawab.in langsung menghasilkan video penjelasan langkah demi langkah—membuat proses belajar jauh lebih aktif, personal, dan menyenangkan.</p>
+                <div className="relative inline-block">
+                  <Button asChild size="lg" className="px-6 sm:px-8 md:px-10 py-4 md:py-6 text-lg sm:text-xl md:text-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <Link href="/dashboard">Belajar Sekarang!</Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-
-            <div className="mt-8 sm:mt-10 md:mt-12 relative inline-block">
-              <Button asChild size="lg" className="px-6 sm:px-8 md:px-10 py-4 md:py-6 text-lg sm:text-xl md:text-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl">
-                <Link href="/dashboard">Coba Sekarang!</Link>
-              </Button>
-              <span className="absolute -top-3 -right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md rotate-6">GRATIS</span>
             </div>
           </div>
 
-          <div className="bg-secondary-yellow px-4 sm:px-8 md:px-16 lg:px-58 py-6 sm:py-8">
+          <div className="bg-primary-blue text-white px-4 sm:px-8 md:px-16 lg:px-58 py-6 sm:py-8">
             <div className="flex flex-col md:flex-row gap-8 md:gap-6 lg:gap-10 justify-center items-stretch">
               <div className="flex flex-row items-center gap-3 w-full md:w-1/3">
                 <Book className="h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0 rounded" />
@@ -71,13 +77,13 @@ export default function Home() {
 
               <div className="w-full md:w-1/2 space-y-4 sm:space-y-6">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                  <span className="text-primary">Tentang Jawab.in</span>
+                  <span className="text-primary">Tentang Pintaru</span>
                 </h1>
 
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed">Jawab.in adalah platform pembelajaran inovatif yang menggabungkan kekuatan AI dengan pendekatan visual untuk membantu siswa memahami pelajaran dengan lebih baik. Dengan teknologi AI canggih, kami dapat memberikan penjelasan yang disesuaikan dengan gaya belajar setiap siswa, dilengkapi dengan video pembelajaran yang interaktif dan mudah dipahami.</p>
+                <p className="text-base sm:text-lg text-gray-700 leading-relaxed">Pintaru adalah platform pembelajaran inovatif yang menggabungkan kekuatan AI dengan pendekatan visual untuk membantu siswa memahami pelajaran dengan lebih baik. Dengan teknologi AI canggih, kami dapat memberikan penjelasan yang disesuaikan dengan gaya belajar setiap siswa, dilengkapi dengan video pembelajaran yang interaktif dan mudah dipahami.</p>
 
                 <div className="relative inline-block">
-                  <Button asChild size="lg" className="px-6 sm:px-8 md:px-10 py-4 md:py-6 text-lg sm:text-xl md:text-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl">
+                  <Button asChild size="lg" className="px-6 sm:px-8 bg-primary-blue md:px-10 py-4 md:py-6 text-lg sm:text-xl md:text-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl">
                     <Link href="/dashboard">Belajar Sekarang!</Link>
                   </Button>
                 </div>

@@ -6,6 +6,7 @@ import { Progress } from '@mantine/core';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 interface VideoCardProps {
   videoData: VideoDataType;
@@ -14,7 +15,7 @@ interface VideoCardProps {
 export default function VideoCard({ videoData }: VideoCardProps) {
   const [status, setStatus] = useState<string>(videoData.message || 'Queued');
   const [progress, setProgress] = useState<number>(typeof videoData.progress === 'number' ? videoData.progress : 0);
-  const [videoUrl, setVideoUrl] = useState<string | null>(videoData.video_url || null);
+  const [, setVideoUrl] = useState<string | null>(videoData.video_url || null);
   const [videoReady, setVideoReady] = useState<boolean>(!!videoData.is_ready);
   const supabaseRef = useRef(createClient());
   const queryClient = useQueryClient();
@@ -142,12 +143,14 @@ export default function VideoCard({ videoData }: VideoCardProps) {
     };
   }, [id, is_ready, video_url, refreshVideos]);
 
-  const cardClasses = 'bg-white rounded-xl shadow-sm p-4 border-[1px] flex flex-col hover:shadow-md transition-all duration-200 relative overflow-hidden group';
+  const cardClasses = 'bg-white rounded-xl shadow-sm p-1 border-[1px] flex flex-col hover:shadow-md transition-all duration-200 relative overflow-hidden group';
+
+  const router = useRouter();
 
   return (
-    <div className={`${cardClasses} h-auto min-h-[18rem] md:h-72`}>
-      <div className="relative w-full rounded-lg overflow-hidden bg-gray-100" style={{ paddingTop: '56.25%' }}>
-        {thumbnail_url && <Image src={thumbnail_url} alt={title} className={`w-full h-full object-cover absolute inset-0 rounded-lg ${!videoReady ? 'opacity-50' : ''}`} width={500} height={281} />}
+    <div className={`${cardClasses} h-auto min-h-[18rem] md:h-72 cursor-pointer`} onClick={() => router.push(`/dashboard/teens/video/${id}`)}>
+      <div className="relative w-full rounded-md overflow-hidden bg-gray-100" style={{ paddingTop: '56.25%' }}>
+        {thumbnail_url && <Image src={thumbnail_url} alt={title} className={`w-full h-full object-cover absolute inset-0 rounded-md ${!videoReady ? 'opacity-50' : ''}`} width={500} height={281} />}
 
         {!videoReady ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
@@ -157,16 +160,13 @@ export default function VideoCard({ videoData }: VideoCardProps) {
             <div className="text-xs text-gray-400">{progress}%</div>
           </div>
         ) : (
-          <video className="absolute inset-0 w-full h-full" controls poster={thumbnail_url || undefined}>
-            <source src={videoUrl || video_url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <Image src={thumbnail_url || ''} alt={title} className={`w-full h-full object-cover absolute inset-0 rounded-lg ${!videoReady ? 'opacity-50' : ''}`} width={500} height={281} />
         )}
       </div>
 
-      <h3 className="text-lg mt-2 font-semibold truncate">{title}</h3>
+      <h3 className="text-lg mt-2 font-semibold truncate px-2">{title}</h3>
 
-      <div className="flex items-center justify-between mt-auto pt-2">
+      <div className="flex items-center justify-between mt-auto py-2 px-2">
         <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full truncate max-w-[60%]">{subject}</span>
         <p className="text-gray-400 text-sm">{formatDate(created_at)}</p>
       </div>

@@ -1,16 +1,16 @@
 export interface VideoDataType {
-  id: number;
-  title: string;
-  description?: string;
-  video_url: string;
-  thumbnail_url?: string;
-  subject: string;
-  user_id: string;
-  created_at: string;
-  updated_at?: string;
-  is_ready: boolean;
-  progress?: number;
-  message?: string;
+	id: number;
+	title: string;
+	prompt: string;
+	video_url: string;
+	thumbnail_url?: string;
+	subject: string;
+	user_id: string;
+	created_at: string;
+	updated_at?: string;
+	is_ready: boolean;
+	progress?: number;
+	message?: string;
 }
 
 export interface SubjectOption {

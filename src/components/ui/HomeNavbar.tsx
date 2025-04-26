@@ -1,45 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-
 import { useRouter, usePathname } from 'next/navigation';
-import cn from 'classnames';
-import { FC, useEffect, useState, useRef } from 'react';
-import { Home, LogIn, LogOut, Menu, X } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { Home, LogIn, LogOut, LogOutIcon, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-
-interface NavItemProps {
-  icon: FC<{ fill: string; width: number; height: number }>;
-  label: string;
-  path: string;
-  isActive: boolean;
-}
-
-const NavItem: FC<NavItemProps> = ({ icon: Icon, label, path, isActive }) => {
-  const router = useRouter();
-
-  return (
-    <div onClick={() => router.push(path)} className={cn('cursor-pointer transition-all flex flex-col items-center gap-1 w-24 py-1 rounded-md', isActive ? 'text-primary-yellow bg-yellow-50' : 'text-[#5D5D5D] hover:bg-gray-100 active:bg-gray-200')}>
-      <Icon fill={isActive ? '#d9a821' : '#5D5D5D'} width={20} height={20} />
-      <span className="text-xs font-semibold">{label}</span>
-    </div>
-  );
-};
-
-// Mobile NavItem with a horizontal layout
-const MobileNavItem: FC<NavItemProps> = ({ icon: Icon, label, path, isActive }) => {
-  const router = useRouter();
-
-  return (
-    <div onClick={() => router.push(path)} className={cn('cursor-pointer transition-all flex items-center gap-3 py-3 px-4 rounded-md w-full', isActive ? 'text-primary-yellow bg-yellow-50' : 'text-[#5D5D5D] hover:bg-gray-100 active:bg-gray-200')}>
-      <Icon fill={isActive ? '#d9a821' : '#5D5D5D'} width={20} height={20} />
-      <span className="font-semibold">{label}</span>
-    </div>
-  );
-};
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function HomeNavbar() {
+  const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,6 +17,11 @@ export default function HomeNavbar() {
   const navbarRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
+
+  // Scroll animation setup
+  const { scrollY } = useScroll();
+  const paddingY = useTransform(scrollY, [0, 100], [40, 12]); // py-6 to py-3
+  const boxShadow = useTransform(scrollY, [0, 100], ['0 0 0 rgba(0,0,0,0)', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)']);
 
   useEffect(() => {
     const getUser = async () => {
@@ -123,22 +98,55 @@ export default function HomeNavbar() {
   return (
     <>
       {/* Desktop Navbar */}
-      <nav className="bg-white px-4 sm:px-8 md:px-12 py-2 hidden sm:block fixed w-full top-0 border-b border-b-[#F5F5F5] shadow-md z-20">
+      <motion.nav
+        className="bg-white px-4 sm:px-8 md:px-16 lg:px-32 hidden sm:block fixed w-full top-0 border-b-[#F5F5F5] z-20"
+        style={{
+          paddingTop: paddingY,
+          paddingBottom: paddingY,
+          boxShadow,
+        }}
+      >
         <div className="flex items-center justify-between">
           <Link href="/">
-            <img src="/logo-expand.svg" alt="logo" className="h-7 w-auto" />
+            <img src="/logo-expand.svg" alt="logo" className="h-12 w-auto" />
           </Link>
-          <div className="flex items-center gap-2">
-            {navItems.map((item, index) => (
-              <NavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={pathname === item.path} />
-            ))}
+          <div className="flex items-center gap-4 pr-10">
+            {!isLoading && user ? (
+              <>
+                <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-12 rounded-lg">
+                  DASHBOARD
+                </button>
+                <button onClick={() => router.push('/auth/logout')} className="bg-white border cursor-pointer border-gray-300 text-gray-700 px-6 font-bold h-12 rounded-lg">
+                  <LogOutIcon className="w-6 h-6" />
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => router.push('/auth/login')} className="bg-white border cursor-pointer border-primary-yellow text-primary-yellow px-6 font-bold h-12 rounded-lg">
+                  LOG IN
+                </button>
+                <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-12 rounded-lg">
+                  SIGN UP
+                </button>
+              </>
+            )}
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile Navbar */}
-      <nav ref={navbarRef} className="bg-white sm:hidden fixed w-full top-0 border-b border-b-[#F5F5F5] shadow-md z-30">
-        <div className="flex items-center  px-4 py-2 relative justify-between">
+      <motion.nav
+        ref={navbarRef}
+        className="bg-white sm:hidden fixed w-full top-0 border-b border-b-[#F5F5F5] z-30"
+        style={{
+          paddingTop: paddingY,
+          paddingBottom: paddingY,
+          paddingLeft: 16, // px-4
+          paddingRight: 16, // px-4
+          boxShadow,
+        }}
+      >
+        <div className="flex items-center relative justify-between">
           <Link href="/">
             <img src="/logo-expand.svg" alt="logo" className="h-6 w-auto" />
           </Link>
@@ -148,16 +156,32 @@ export default function HomeNavbar() {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div ref={menuRef} className="absolute inset-x-0 top-[54px] bg-white z-20 sm:hidden border-b border-gray-200 shadow-md">
-              <div className="flex flex-col p-4">
-                {navItems.map((item, index) => (
-                  <MobileNavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={pathname === item.path} />
-                ))}
+            <motion.div ref={menuRef} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="absolute inset-x-0 top-full bg-white z-20 sm:hidden border-b border-gray-200 shadow-md">
+              <div className="flex flex-col p-4 gap-2">
+                {!isLoading && user ? (
+                  <>
+                    <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow w-full cursor-pointer text-white py-3 px-4 font-bold rounded-md">
+                      Dashboard
+                    </button>
+                    <button onClick={() => router.push('/auth/logout')} className="bg-white border w-full cursor-pointer border-gray-300 text-gray-700 py-3 px-4 font-bold rounded-md">
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => router.push('/auth/login')} className="bg-white border w-full cursor-pointer border-primary-yellow text-primary-yellow py-3 px-4 font-bold rounded-md">
+                      Log In
+                    </button>
+                    <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border w-full cursor-pointer text-white py-3 px-4 font-bold rounded-md">
+                      Sign Up
+                    </button>
+                  </>
+                )}
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
-      </nav>
+      </motion.nav>
     </>
   );
 }
