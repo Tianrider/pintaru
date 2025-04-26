@@ -81,7 +81,7 @@ export default function Navbar() {
           </Link>
           <div className="flex items-center gap-2">
             {navItems.map((item, index) => (
-              <NavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={item.path === '/dashboard' ? pathname === '/dashboard' : item.path !== '/auth/logout' && pathname.startsWith(item.path)} />
+              <NavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={pathname === item.path || (item.path !== '/auth/logout' && pathname.startsWith(item.path) && item.path !== '/dashboard/kids') || (item.path === '/dashboard/kids' && pathname === '/dashboard/kids')} />
             ))}
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function Navbar() {
         <div className="absolute inset-x-0 top-[54px] bg-white z-20 sm:hidden border-b border-gray-200 shadow-md">
           <div className="flex flex-col p-4">
             {navItems.map((item, index) => (
-              <MobileNavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={item.path === '/dashboard' ? pathname === '/dashboard' : item.path !== '/auth/logout' && pathname.startsWith(item.path)} />
+              <MobileNavItem key={index} icon={item.icon} label={item.label} path={item.path} isActive={pathname === item.path || (item.path !== '/auth/logout' && pathname.startsWith(item.path) && item.path !== '/dashboard/kids') || (item.path === '/dashboard/kids' && pathname === '/dashboard/kids')} />
             ))}
           </div>
         </div>
