@@ -9,20 +9,6 @@ import { useUser } from '@/app/hooks/useUser';
 import { useBooks } from '@/app/hooks/useBooks';
 import Link from 'next/link';
 
-type StoryImages = {
-  cover: string | null;
-  page1: string | null;
-  page2: string | null;
-  page3: string | null;
-  page4: string | null;
-  page5: string | null;
-  page6: string | null;
-  page7: string | null;
-  page8: string | null;
-  page9: string | null;
-  page10: string | null;
-};
-
 export default function KidsDashboard() {
   const { user, isLoading } = useUser();
   const { books, isLoading: isLoadingBooks, refetch } = useBooks();
@@ -33,7 +19,6 @@ export default function KidsDashboard() {
   const [progressStatus, setProgressStatus] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
-  const [images, setImages] = useState<StoryImages | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter books based on search query
@@ -47,22 +32,17 @@ export default function KidsDashboard() {
     }
 
     setIsGenerating(true);
-    setImages(null);
     setProgressStatus('Starting storybook generation...');
 
     try {
-      const result = await createStorybook(tema, karakter, (status) => {
+      const result = await createStorybook(tema, karakter, user?.id, (status) => {
         setProgressStatus(status.message);
         setCurrentStep(status.step);
         setTotalSteps(status.totalSteps);
       });
 
       if (result.success && result.data) {
-        setImages(result.data.images as StoryImages);
         setProgressStatus('Storybook generated successfully!');
-
-        // Immediately refetch books to show the new one
-        refetch();
       } else {
         setProgressStatus(`Error: ${result.error || 'Unknown error'}`);
       }
@@ -71,6 +51,8 @@ export default function KidsDashboard() {
       setProgressStatus(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsGenerating(false);
+      // Refetch books after generation is complete
+      refetch();
     }
   };
 
@@ -241,7 +223,7 @@ export default function KidsDashboard() {
           filteredBooks.map((book) => (
             <Link href={`/dashboard/kids/storybook/${book.id}`} key={book.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
               <div className="relative pb-[66.67%]">
-                <Image src={book.cover} alt={book.title || 'Storybook cover'} fill className="object-cover" />
+                <Image src={book.cover || 'https://upload.wikimedia.org/wikipedia/commons/6/68/Solid_black.png'} alt={book.title || 'Storybook cover'} fill className="object-cover" />
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-lg mb-1">{book.title || 'Untitled Storybook'}</h3>
@@ -366,38 +348,6 @@ export default function KidsDashboard() {
           </>
         )}
       </div>
-
-      {/* Images section - only shown when actual images are generated and generation is complete */}
-      {!isGenerating && images && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Generated Images</h2>
-
-          {images.cover && (
-            <div className="mb-8">
-              <h3 className="text-lg font-medium mb-2">Cover</h3>
-              <div className="border rounded overflow-hidden">
-                <Image src={`data:image/png;base64,${images.cover}`} alt="Cover" width={768} height={512} className="w-full h-auto" />
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {Array.from({ length: 10 }).map((_, index) => {
-              const pageKey = `page${index + 1}` as keyof typeof images;
-              const pageImage = images[pageKey];
-
-              if (!pageImage) return null;
-
-              return (
-                <div key={pageKey} className="border rounded overflow-hidden">
-                  <h3 className="text-lg font-medium p-2 bg-gray-100">Page {index + 1}</h3>
-                  <Image src={`data:image/png;base64,${pageImage}`} alt={`Page ${index + 1}`} width={768} height={512} className="w-full h-auto" />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </>
   );
 }
