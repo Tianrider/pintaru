@@ -22,7 +22,7 @@ export default function Home() {
                 <MacbookPro src="/demo.gif" className="w-full h-full rounded-lg" />
               </div>
 
-              <div className="w-full md:w-1/2 space-y-4 sm:space-y-6">
+              <div className="w-full md:w-1/2 space-y-4 sm:space-y-6 md:max-w-[90%]">
                 <div className="flex gap-2 items-center">
                   <div className="bg-primary-yellow/20 rounded-full w-fit px-4 py-1.5 text-gray-700 border border-amber-200 flex items-center gap-2">
                     <Stars size={16} className="text-amber-500" />
@@ -41,15 +41,15 @@ export default function Home() {
                   Dengan <span className="font-bold text-primary-blue">PINTARU</span>, cukup ketik atau unggah soal, dan kamu akan langsung mendapatkan penjelasan visual berbentuk video atau cerita interaktif. Cocok untuk anak-anak, pelajar, dan siapa pun yang ingin belajar dengan cara yang berbeda.
                 </p>
 
-                <div className="pt-4 flex flex-wrap gap-4">
-                  <Button asChild size="lg" className="bg-gradient-to-r from-amber-400 to-amber-500 px-6 sm:px-8 py-6 text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-amber-300 hover:border-amber-400 rounded-full transform hover:scale-105 flex items-center gap-2">
-                    <Link href="/dashboard">
-                      <Wand2 size={20} className="mr-2" />
+                <div className="pt-4 flex flex-wrap justify-between">
+                  <Button asChild size="lg" className="w-[48%] bg-gradient-to-r from-amber-400 to-amber-500 py-6 text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-amber-300 hover:border-amber-400 rounded-full transform hover:scale-105 flex items-center gap-2">
+                    <Link href="/dashboard flex-shrink-0">
+                      <Wand2 size={20} className="mr-1 flex-shrink-0" />
                       Belajar Sekarang!
                     </Link>
                   </Button>
 
-                  <Button asChild variant="outline" size="lg" className="px-6 sm:px-8 py-6 text-lg font-medium border-2 border-gray-300 hover:border-primary-blue text-gray-700 hover:text-primary-blue rounded-full transition-all duration-300 transform hover:scale-105">
+                  <Button asChild variant="outline" size="lg" className="w-[48%] py-6 text-lg font-medium border-2 border-gray-300 hover:border-primary-blue text-gray-700 hover:text-primary-blue rounded-full transition-all duration-300 transform hover:scale-105">
                     <Link href="#about">Pelajari Selengkapnya</Link>
                   </Button>
                 </div>
