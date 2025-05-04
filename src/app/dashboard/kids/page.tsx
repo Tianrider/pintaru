@@ -275,77 +275,25 @@ export default function KidsDashboard() {
             <p className="text-gray-500">Try a different search term</p>
           </div>
         ) : (
-          // Fallback when no books are available
-          <>
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative pb-[66.67%]">
-                <Image src="https://via.placeholder.com/1536x1024/FFAA77/ffffff" alt="Petualangan Kiki di Hutan Ajaib" fill className="object-cover" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-bold text-lg mb-1">Petualangan Kiki di Hutan Ajaib</h3>
-                <div className="flex flex-wrap gap-1 mb-1">
-                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full">Kerjasama</span>
-                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full">Berani</span>
-                </div>
-                <p className="text-gray-500 text-xs">
-                  Created at{' '}
-                  {new Date().toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </p>
-              </div>
+          // Empty state when no books are available
+          <div className="col-span-full flex flex-col items-center justify-center py-12">
+            <div className="text-amber-500 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                <path d="M12 11h4" />
+                <path d="M12 7h4" />
+              </svg>
             </div>
-
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative pb-[66.67%]">
-                <Image src="https://via.placeholder.com/1536x1024/77AAFF/ffffff" alt="Si Kucing dan Tiga Sekawan" fill className="object-cover" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-bold text-lg mb-1">Si Kucing dan Tiga Sekawan</h3>
-                <div className="flex flex-wrap gap-1 mb-1">
-                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full">Empati</span>
-                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full">Kejujuran</span>
-                </div>
-                <p className="text-gray-500 text-xs">
-                  Created at{' '}
-                  {new Date().toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative pb-[66.67%]">
-                <Image src="https://via.placeholder.com/1536x1024/77FFAA/ffffff" alt="Dinosaurus Kecil yang Pantang Menyerah" fill className="object-cover" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-bold text-lg mb-1">Dinosaurus Kecil yang Pantang Menyerah</h3>
-                <div className="flex flex-wrap gap-1 mb-1">
-                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full">Pantang Menyerah</span>
-                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full">Berani Coba Hal Baru</span>
-                </div>
-                <p className="text-gray-500 text-xs">
-                  Created at{' '}
-                  {new Date().toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </p>
-              </div>
-            </div>
-          </>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">You have not created any storybook</h3>
+            <p className="text-gray-600 text-center max-w-md mb-6">Let&apos;s create a new one! Generate your first storybook by selecting a theme and character above.</p>
+            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-amber-500 text-white py-2 px-6 font-semibold rounded-md text-sm hover:bg-amber-600 transition-colors flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 19V5" />
+                <path d="m5 12 7-7 7 7" />
+              </svg>
+              Create Your First Storybook
+            </button>
+          </div>
         )}
       </div>
     </>
