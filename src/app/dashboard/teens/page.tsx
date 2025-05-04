@@ -1,5 +1,4 @@
 'use client';
-import ProfileSection from './shared/ProfileSection/ProfileSection';
 import PromptBar from './shared/PromptBar/PromptBar';
 import VideoList from './shared/Video/VideoList';
 import { useRef } from 'react';
@@ -24,7 +23,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <ProfileSection />
       <div className="lg:px-0 px-4">
         <PromptBar onVideoRequest={handleVideoRequest} />
         {/* <Banner /> */}
