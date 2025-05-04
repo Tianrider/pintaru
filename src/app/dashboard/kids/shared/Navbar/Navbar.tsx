@@ -75,7 +75,7 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="bg-white px-4 py-3 hidden sm:block sticky top-0 border-b border-b-[#F5F5F5] shadow-md z-20">
+      <nav className="bg-white px-4 py-3 hidden sm:block border-b border-b-[#F5F5F5] shadow-md z-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-5 items-center">
             {/* Logo Section - 1/5 width */}
@@ -116,7 +116,7 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Navigation */}
-      <nav className="bg-white px-4 py-2 sm:hidden sticky top-0 border-b border-b-[#F5F5F5] shadow-md z-30">
+      <nav className="bg-white px-4 py-2 sm:hidden border-b border-b-[#F5F5F5] shadow-md z-30">
         <div className="flex items-center justify-between">
           <Link href="/">
             <img src="/logo-expand.svg" alt="logo" className="h-6 w-auto" />

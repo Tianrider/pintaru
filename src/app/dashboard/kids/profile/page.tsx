@@ -75,8 +75,6 @@ export default function ProfilePage() {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">User Profile</h1>
-
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Profile Information Card */}
         <Card className="w-full bg-white border rounded-lg overflow-hidden">
