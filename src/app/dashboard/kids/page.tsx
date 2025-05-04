@@ -177,13 +177,14 @@ export default function KidsDashboard() {
 
       {/* Progress bar section - kept the same functionality with improved styling */}
       {isGenerating && (
-        <div className="mt-6 max-w-2xl mx-auto bg-white p-6 rounded-xl border-2 border-blue-100 shadow-md w-xl">
+        <div className="mt-6 max-w-2xl mx-auto bg-white p-6 rounded-xl border-2 border-blue-100 shadow-md w-2xl">
           <div className="bg-gray-100 rounded-full h-6 mb-4 overflow-hidden border border-gray-200">
             <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-6 rounded-full flex items-center justify-center text-xs text-white font-bold" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
           </div>
           <p className="text-gray-700 text-center font-medium">
             Step {currentStep} of {totalSteps}: {progressStatus}
           </p>
+          <p className="text-red-500 text-center font-medium mt-2">*Do NOT refresh the page, it will interrupt the generation process!</p>
         </div>
       )}
 
