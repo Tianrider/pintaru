@@ -5,7 +5,7 @@ import { VideoDataType } from '@/types/video-types';
 import { useParams, useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Chat from './components/chat';
@@ -19,6 +19,7 @@ export default function VideoPage() {
   const [recommendedVideos, setRecommendedVideos] = useState<VideoDataType[]>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(true);
   const [currentTimestamp, setCurrentTimestamp] = useState<string>('');
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const redirect = useRouter();
 
@@ -113,7 +114,12 @@ export default function VideoPage() {
     const video = videoRef.current;
     if (video) {
       const handlePause = () => {
+        setIsPlaying(false);
         captureFrame();
+      };
+
+      const handlePlay = () => {
+        setIsPlaying(true);
       };
 
       // Add error handling for video
@@ -123,10 +129,12 @@ export default function VideoPage() {
       };
 
       video.addEventListener('pause', handlePause);
+      video.addEventListener('play', handlePlay);
       video.addEventListener('error', handleVideoError);
 
       return () => {
         video.removeEventListener('pause', handlePause);
+        video.removeEventListener('play', handlePlay);
         video.removeEventListener('error', handleVideoError);
       };
     }
@@ -135,79 +143,146 @@ export default function VideoPage() {
   // Render loading skeleton
   if (loading) {
     return (
-      <div className="w-full py-8 gap-8 grid grid-cols-5 px-12">
-        <div className="col-span-3">
-          <Skeleton className="w-full h-[400px] rounded-lg" />
-          <div className="mt-4">
-            <Skeleton className="w-2/3 h-8 mb-2" />
+      <div className="w-full max-w-7xl mx-auto py-8 gap-8 grid grid-cols-1 lg:grid-cols-5 px-4 md:px-8">
+        <div className="lg:col-span-3">
+          <Skeleton className="w-full aspect-video rounded-xl" />
+          <div className="mt-6">
+            <Skeleton className="w-2/3 h-8 mb-3" />
             <Skeleton className="w-full h-24" />
           </div>
+          <div className="mt-8">
+            <Skeleton className="w-48 h-7 mb-4" />
+            <div className="grid grid-cols-3 gap-4">
+              <Skeleton className="h-36 w-full rounded-xl" />
+              <Skeleton className="h-36 w-full rounded-xl" />
+              <Skeleton className="h-36 w-full rounded-xl" />
+            </div>
+          </div>
         </div>
-        <div className="col-span-2">
-          <Skeleton className="w-full h-[70vh]" />
+        <div className="lg:col-span-2 mt-8 lg:mt-0">
+          <Skeleton className="w-full h-[70vh] rounded-xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-fit px-12 flex flex-col pt-8 lg:overflow-y-clip">
-      <div className="w-full flex gap-2 items-center" onClick={() => router.push('/dashboard')}>
-        <Button variant="outline" size="icon" onClick={() => router.push('/dashboard')}>
-          <ArrowLeft className="w-6 h-6" />
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 lg:pb-12">
+      {/* Back button with enhanced styling */}
+      <div className="flex items-center gap-2 mb-6 cursor-pointer hover:text-blue-600 transition-colors w-fit" onClick={() => router.push('/dashboard/teens')}>
+        <Button variant="outline" size="icon" className="shadow-sm hover:bg-blue-50 hover:text-blue-600 border-blue-100">
+          <ArrowLeft className="w-5 h-5" />
         </Button>
-        Back
+        <span className="font-medium">Back to Dashboard</span>
       </div>
-      <div className="w-full gap-8 flex flex-col lg:grid py-4 lg:grid-cols-5 h-fit">
-        <div className="col-span-3">
+
+      {/* Main content with enhanced styling */}
+      <div className="w-full gap-8 grid grid-cols-1 lg:grid-cols-5">
+        <div className="lg:col-span-3">
           {videoData && (
             <>
-              <div className="relative">
-                <video ref={videoRef} src={videoData.video_url} className="w-full h-fit rounded-lg" controls crossOrigin="anonymous" onPause={captureFrame}></video>
-                <div className="absolute top-4 right-4 text-xs bg-black/60 text-white p-2 rounded-md">Pause video to analyze the current frame with AI</div>
-              </div>
-              <div className="mt-4">
-                <h2 className="text-2xl font-bold">{videoData.title}</h2>
-                <div className="mt-2 text-sm text-gray-500">Subject: {videoData.subject}</div>
+              <div className="relative rounded-xl overflow-hidden border-2 border-blue-100 shadow-lg bg-gradient-to-b from-blue-50 to-white">
+                {/* Decorative elements */}
+                <div className="absolute -top-4 -right-4 h-16 w-16 rounded-full bg-yellow-100 opacity-40 z-0"></div>
+                <div className="absolute -bottom-4 -left-4 h-12 w-12 rounded-full bg-blue-100 opacity-40 z-0"></div>
 
-                <p className="mt-1 text-gray-700 line-clamp-4 overflow-x-auto">Video Prompt: {videoData.prompt}</p>
-                <p className="mt-1 text-gray-700 line-clamp-4 overflow-x-auto ">Upload date: {new Date(videoData.created_at).toLocaleDateString()}</p>
+                <div className="relative z-10">
+                  <video ref={videoRef} src={videoData.video_url} className="w-full aspect-video rounded-xl" controls crossOrigin="anonymous" onPause={captureFrame} />
 
-                {/* Recommendation Section */}
-                <div>
-                  <h3 className="text-xl font-bold mb-4">Recommended Videos</h3>
-                  {loadingRecommendations ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Skeleton className="h-40 w-full rounded-lg" />
-                      <Skeleton className="h-40 w-full rounded-lg" />
-                      <Skeleton className="h-40 w-full rounded-lg" />
-                    </div>
-                  ) : recommendedVideos.length > 0 ? (
-                    <div className="grid grid-cols-3 gap-4">
-                      {recommendedVideos.map((video) => (
-                        <div
-                          key={video.id}
-                          className="h-36 border flex flex-col gap-1 p-1 rounded-lg cursor-pointer"
-                          onClick={() => {
-                            router.push(`/dashboard/teens/video/${video.id}`);
-                          }}
-                        >
-                          <Image className="w-full rounded-lg" src={video.thumbnail_url || ''} alt={video.title} width={100} height={100} />
-                          <p className="text-xs truncate">{video.title}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500 bg-gray-50 p-4 rounded-lg">No related videos found</p>
-                  )}
+                  {/* Enhanced pause hint */}
+                  <div className="absolute top-4 right-4 text-xs bg-black/70 text-white px-3 py-2 rounded-md shadow-md backdrop-blur-sm flex items-center gap-1.5">
+                    <div className="flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">{isPlaying ? <Pause className="w-3 h-3 text-white" /> : <Play className="w-3 h-3 text-white ml-0.5" />}</div>
+                    <span>Pause video to analyze with AI</span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Video details with enhanced styling */}
+              <div className="mt-6 bg-white p-6 rounded-xl border-2 border-blue-100 shadow-md">
+                <h2 className="text-2xl font-bold text-blue-800">{videoData.title}</h2>
+
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className="bg-blue-100 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-xs font-medium">{videoData.subject}</span>
+                  <span className="bg-amber-100 text-amber-600 border border-amber-200 px-3 py-1 rounded-full text-xs font-medium">{new Date(videoData.created_at).toLocaleDateString()}</span>
+                </div>
+
+                <div className="mt-4 text-gray-700 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <div className="font-medium text-sm text-blue-700 mb-1">Video Prompt:</div>
+                  <p className="text-gray-600">{videoData.prompt}</p>
+                </div>
+              </div>
+
+              {/* Recommended videos section with enhanced styling */}
+              <div className="mt-8">
+                <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                  <span className="bg-blue-100 text-blue-500 w-7 h-7 flex items-center justify-center rounded-full mr-2 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                    </svg>
+                  </span>
+                  Recommended Videos
+                </h3>
+
+                {loadingRecommendations ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Skeleton className="h-40 w-full rounded-lg" />
+                    <Skeleton className="h-40 w-full rounded-lg" />
+                    <Skeleton className="h-40 w-full rounded-lg" />
+                  </div>
+                ) : recommendedVideos.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {recommendedVideos.map((video) => (
+                      <div
+                        key={video.id}
+                        className="bg-white rounded-xl overflow-hidden border-2 border-gray-100 shadow-md hover:shadow-lg transition-all transform hover:scale-102 cursor-pointer flex flex-col"
+                        onClick={() => {
+                          router.push(`/dashboard/teens/video/${video.id}`);
+                        }}
+                      >
+                        <div className="relative pb-[56.25%]">
+                          {' '}
+                          {/* 16:9 aspect ratio */}
+                          <Image className="absolute inset-0 object-cover w-full h-full rounded-t-lg" src={video.thumbnail_url || ''} alt={video.title} width={300} height={169} />
+                        </div>
+                        <div className="p-3">
+                          <p className="font-medium text-sm line-clamp-1">{video.title}</p>
+                          <p className="text-xs text-gray-500 mt-1">{video.subject}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-white p-6 rounded-xl border-2 border-blue-100 shadow-md text-center">
+                    <div className="text-amber-400 mb-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+                      </svg>
+                    </div>
+                    <p className="text-gray-600 font-medium">No related videos found</p>
+                    <p className="text-gray-500 text-sm mt-1">Check back later for more recommendations</p>
+                  </div>
+                )}
               </div>
             </>
           )}
 
-          {error && <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">{error}</div>}
+          {error && (
+            <div className="mt-4 p-5 bg-red-50 text-red-700 rounded-xl border border-red-200 shadow">
+              <div className="flex items-center gap-2 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span className="font-bold">Error</span>
+              </div>
+              <p>{error}</p>
+            </div>
+          )}
         </div>
-        <div className="col-span-2 w-full border rounded-lg">
+
+        {/* Chat section with enhanced styling */}
+        <div className="lg:col-span-2 bg-white rounded-xl border-2 border-blue-100 shadow-lg overflow-hidden mt-6 lg:mt-0 h-2/3">
           <Chat imageData={imageData} timestamp={currentTimestamp} />
         </div>
       </div>
