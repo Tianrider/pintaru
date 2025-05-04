@@ -22,7 +22,6 @@ const recommendations = [
     icon: <Stethoscope className="text-blue-400" strokeWidth={3} size={16} />,
     text: 'Bagaimana cara kanker paru-paru terjadi?',
   },
-
   {
     icon: <CircuitBoard className="text-yellow-400" strokeWidth={3} size={16} />,
     text: 'Bagaimana cara komputer menyimpan data?',
@@ -79,8 +78,6 @@ export default function PromptBar({ onVideoRequest }: PromptBarProps) {
   };
 
   const handleLinkSubmit = () => {
-    // This would eventually process the link
-    // For now, just close the popup
     setShowLinkPopup(false);
   };
 
@@ -90,18 +87,19 @@ export default function PromptBar({ onVideoRequest }: PromptBarProps) {
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col items-center">
+      {/* Input form */}
       <form onSubmit={handleSubmit} className="flex w-full">
-        <div className="flex w-full px-3 pl-2 sm:pl-8 rounded-full items-center space-x-2 relative border bg-white py-1.5 text-base shadow-md transition-all duration-200 outline-none h-14 hover:shadow-lg">
-          <Sparkles className="text-yellow-500 scale-125 sm:scale-150 hidden sm:block" size={20} />
-          <Input placeholder="Ketik atau upload soal di sini" className="!text-xl border-none shadow-none focus:ring-0" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+        <div className="flex w-full pl-4 pr-1.5 rounded-full items-center relative border border-gray-200 bg-white py-1.5 text-base shadow-lg outline-none h-14">
+          <Sparkles className="text-yellow-500" size={30} />
+          <Input placeholder="Ketik atau upload soal di sini" className="!text-lg border-none shadow-none focus:ring-0" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
 
           <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange} className="hidden" />
 
           <div className="flex items-center gap-2">
             {previewUrl && (
               <div className="relative">
-                <div className="h-12 w-12 rounded-md overflow-hidden border border-gray-200">
+                <div className="h-10 w-10 rounded-md overflow-hidden border border-gray-200">
                   <Image width={32} height={32} src={previewUrl} alt="Selected" className="h-full w-full object-cover" />
                 </div>
                 <button type="button" onClick={clearImage} className="absolute -top-1 -right-1 bg-gray-100 rounded-full p-0.5 shadow-sm hover:bg-gray-200 transition-colors">
@@ -109,22 +107,29 @@ export default function PromptBar({ onVideoRequest }: PromptBarProps) {
                 </button>
               </div>
             )}
-            <Button type="button" variant="ghost" className="cursor-pointer hover:bg-gray-100 active:bg-gray-200 sm:p-3 p-2" onClick={handleImageClick}>
-              <ImageIcon className="text-gray-500 sm:scale-125 scale-100" size={20} />
+            <Button type="button" variant="ghost" className="cursor-pointer hover:bg-gray-100 active:bg-gray-200 p-2" onClick={handleImageClick}>
+              <ImageIcon className="text-gray-500" size={18} />
             </Button>
-            <Button type="button" variant="ghost" className="cursor-pointer hover:bg-gray-100 active:bg-gray-200 sm:p-3 p-2" onClick={handleLinkClick}>
-              <Globe className="text-gray-500 sm:scale-125 scale-100" size={20} />
+            <Button type="button" variant="ghost" className="cursor-pointer hover:bg-gray-100 active:bg-gray-200 p-2" onClick={handleLinkClick}>
+              <Globe className="text-gray-500" size={18} />
             </Button>
           </div>
-          <button type="submit" className="bg-secondary-yellow h-full rounded-full px-5 flex items-center gap-2 justify-center text-white font-bold cursor-pointer shadow-md hover:bg-secondary-yellow/90 active:bg-secondary-yellow/80 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-yellow-200 focus:ring-offset-2 sm:px-5 px-3">
-            <Video className="text-white" />
+          <button type="submit" className="bg-secondary-yellow h-11 ml-3 rounded-full px-4 flex items-center gap-2 justify-center text-white font-bold cursor-pointer shadow-md hover:bg-secondary-yellow/90 active:bg-secondary-yellow/80 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-yellow-200 focus:ring-offset-2">
+            <Video className="text-white" size={18} />
             <p className="text-center pb-[1px] sm:block hidden">Create</p>
           </button>
         </div>
       </form>
 
+      {/* Suggestions */}
+      <div className="flex gap-2 overflow-x-auto hide-scrollbar w-4/5 py-2 bg-white rounded-b-2xl px-3 shadow-lg">
+        {recommendations.map((rec, index) => (
+          <RecommendationChip key={index} icon={rec.icon} text={rec.text} onClick={() => handleRecommendationClick(rec.text)} />
+        ))}
+      </div>
+
       {showLinkPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-4 shadow-lg w-full max-w-md">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold text-lg">Add a link</h3>
@@ -142,21 +147,15 @@ export default function PromptBar({ onVideoRequest }: PromptBarProps) {
           </div>
         </div>
       )}
-
-      <div className="flex gap-4 justify-center flex-wrap">
-        {recommendations.map((rec, index) => (
-          <RecommendationChip key={index} icon={rec.icon} text={rec.text} onClick={() => handleRecommendationClick(rec.text)} />
-        ))}
-      </div>
     </div>
   );
 }
 
 function RecommendationChip({ icon, text, onClick }: { icon: React.ReactNode; text: string; onClick: () => void }) {
   return (
-    <div onClick={onClick} className="flex items-center cursor-pointer gap-2 bg-gray-100 rounded-full px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-200 active:bg-gray-300 transition-all duration-200 group">
+    <div onClick={onClick} className="flex-shrink-0 flex items-center cursor-pointer gap-2 bg-gray-100 rounded-full px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-200 active:bg-gray-300 transition-all duration-200 group">
       <div className="transition-transform duration-200 group-hover:scale-110">{icon}</div>
-      <span className="group-hover:text-gray-900">{text}</span>
+      <span className="group-hover:text-gray-900 whitespace-nowrap">{text}</span>
     </div>
   );
 }
