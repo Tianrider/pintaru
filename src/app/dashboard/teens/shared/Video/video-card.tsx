@@ -1,6 +1,6 @@
 'use client';
 import type { VideoDataType } from '@/types/video-types';
-import { Loader } from 'lucide-react';
+import { Loader, Trophy } from 'lucide-react';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { Progress } from '@mantine/core';
 import { createClient } from '@/utils/supabase/client';
@@ -175,9 +175,14 @@ export default function VideoCard({ videoData }: VideoCardProps) {
 
       <h3 className="text-lg mt-2 font-semibold truncate px-2">{title}</h3>
 
-      <div className="flex items-center justify-between mt-auto py-2 px-2">
+      <div className="flex justify-between mt-auto pb-1 px-2">
         <span className="px-3 py-1 bg-yellow-100 text-amber-600 text-xs font-medium rounded-full truncate max-w-[60%] border border-amber-600">{subject}</span>
-        <p className="text-gray-400 text-sm">{formatDate(created_at)}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-gray-400 text-sm">{formatDate(created_at)}</p>
+          <span className="text-blue-500 text-xs font-medium flex items-center gap-1">
+            +2 EXP <Trophy size={12} className="" />
+          </span>
+        </div>
       </div>
     </div>
   );
