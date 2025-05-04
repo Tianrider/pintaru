@@ -61,6 +61,8 @@ const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = fals
         created_at: new Date().toISOString(),
         user_id: '',
         is_ready: false,
+        progress: 0,
+        message: 'Starting generation...',
       };
 
       if (!old) return [tempVideo];
@@ -86,13 +88,21 @@ const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = fals
   // Filter videos based on search term and selected subjects
   const filteredVideos = useMemo(() => {
     if (!data) return [];
-    return data.filter((video: VideoDataType) => {
-      const matchesSearch = video.title.toLowerCase().includes(search.toLowerCase()) || video.subject.toLowerCase().includes(search.toLowerCase());
 
-      const matchesSubject = selectedSubjects.length === 0 || selectedSubjects.some((subject) => subject.value === video.subject);
+    return data
+      .filter((video: VideoDataType) => {
+        const matchesSearch = video.title.toLowerCase().includes(search.toLowerCase()) || video.subject.toLowerCase().includes(search.toLowerCase());
+        const matchesSubject = selectedSubjects.length === 0 || selectedSubjects.some((subject) => subject.value === video.subject);
+        return matchesSearch && matchesSubject;
+      })
+      .sort((a, b) => {
+        // First criteria: unready videos come first
+        if (!a.is_ready && b.is_ready) return -1;
+        if (a.is_ready && !b.is_ready) return 1;
 
-      return matchesSearch && matchesSubject;
-    });
+        // Second criteria: sort by date (newest first)
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
   }, [data, search, selectedSubjects]);
 
   // Calculate pagination
