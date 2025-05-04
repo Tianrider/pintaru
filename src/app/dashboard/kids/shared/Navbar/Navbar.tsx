@@ -137,6 +137,8 @@ export default function Navbar() {
         </div>
       </nav>
 
+
+
       {isMenuOpen && (
         <div className="absolute inset-x-0 top-[54px] bg-white z-20 sm:hidden border-b border-gray-200 shadow-md">
           <div className="flex flex-col p-4">
