@@ -107,7 +107,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-2 bg-amber-50 py-1 px-2 rounded-lg border border-amber-100">
                   <div className="flex items-center gap-2">
                     <div className="text-xs font-bold">
-                      <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded-l-md">XP</span>
+                      <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded-l-md">EXP</span>
                       <span className="bg-amber-300 text-blue-800 px-1.5 py-0.5 rounded-r-md">{progress}/60</span>
                     </div>
                     <Stars size={14} className="text-amber-500" />

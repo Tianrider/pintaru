@@ -169,7 +169,10 @@ export default function VideoCard({ videoData }: VideoCardProps) {
             <div className="text-xs text-gray-400">{progress}%</div>
           </div>
         ) : (
-          <Image src={thumbnail_url || ''} alt={title} className={`w-full h-full object-cover absolute inset-0 rounded-lg ${!videoReady ? 'opacity-50' : ''}`} width={500} height={281} />
+          <>
+            <Image src={thumbnail_url || ''} alt={title} className={`w-full h-full object-cover absolute inset-0 rounded-lg ${!videoReady ? 'opacity-50' : ''}`} width={500} height={281} />
+            <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 px-2 py-0.5 rounded text-white text-xs">01:25</div>
+          </>
         )}
       </div>
 
