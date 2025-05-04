@@ -131,7 +131,7 @@ const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = fals
           <GroupHeader title="Temukan Video Baru Dari Komunitas Lainnya!" />
         </div>
       )}
-      <div className="flex gap-4 max-w-4xl mx-auto w-full flex-wrap md:flex-nowrap">
+      <div className={`flex gap-4 max-w-4xl mx-auto w-full flex-wrap md:flex-nowrap ${isCommunity ? '-mt-8' : ''}`}>
         <div className="w-full md:w-[70%] relative h-12">
           <Input placeholder="Cari Videomu.." className="rounded-full h-full px-11 border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 focus:border-secondary-yellow text-base" value={search} onChange={handleSearch} />
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center">
