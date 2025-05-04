@@ -36,7 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="fixed top-0 w-full z-50">
             <Navbar />
           </div>
-          <div className="mt-[60px] px-3 md:px-10 lg:px-20 md:pt-10 pb-32 md:pb-10 relative z-10">
+          <div className="mt-[60px] px-3 md:px-10 lg:px-20 md:pt-4 pb-32 md:pb-10 relative z-10">
             <div className="max-w-6xl pb-10 mx-auto">
               <div className="flex flex-col gap-6">{children}</div>
             </div>

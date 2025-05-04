@@ -155,7 +155,16 @@ export default function VideoCard({ videoData }: VideoCardProps) {
         {!videoReady ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
             <Loader className="w-8 h-8 animate-spin text-gray-400" />
-            <div className="text-sm text-gray-500 font-medium px-2 text-center">{status && status.toLowerCase().includes('python') ? 'An error occurred' : status || 'Processing...'}</div>
+            <div className="text-sm text-gray-500 font-medium px-2 text-center">
+              {status && status.toLowerCase().includes('python')
+                ? 'An Error Occurred'
+                : status
+                ? status
+                    .split(' ')
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                    .join(' ')
+                : 'Processing...'}
+            </div>
             <Progress value={progress} className="w-3/4" color="yellow" size="sm" radius="xl" />
             <div className="text-xs text-gray-400">{progress}%</div>
           </div>
@@ -167,7 +176,7 @@ export default function VideoCard({ videoData }: VideoCardProps) {
       <h3 className="text-lg mt-2 font-semibold truncate px-2">{title}</h3>
 
       <div className="flex items-center justify-between mt-auto py-2 px-2">
-        <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full truncate max-w-[60%]">{subject}</span>
+        <span className="px-3 py-1 bg-yellow-100 text-amber-600 text-xs font-medium rounded-full truncate max-w-[60%] border border-amber-600">{subject}</span>
         <p className="text-gray-400 text-sm">{formatDate(created_at)}</p>
       </div>
     </div>

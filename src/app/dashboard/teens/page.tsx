@@ -22,7 +22,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="lg:px-0 px-4 pb-28">
+      <div className="lg:px-0 px-4 pb-20">
         <VideoList ref={videoListRef} />
       </div>
       

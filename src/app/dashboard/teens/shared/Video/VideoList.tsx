@@ -117,8 +117,8 @@ const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = fals
   return (
     <div className="mt-8 gap-5 flex flex-col">
       {!isCommunity && (
-        <div className="flex justify-between items-center">
-          <GroupHeader title="Temukan Video Baru Dari dari Komunitas Lainnya" />
+        <div className="mb-2">
+          <GroupHeader title="Temukan Video Baru Dari Komunitas Lainnya!" />
         </div>
       )}
       <div className="flex gap-4 max-w-4xl mx-auto w-full flex-wrap md:flex-nowrap">
@@ -139,7 +139,7 @@ const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = fals
           </div>
         </div>
       </div>
-      <div className="mt-2">
+      <div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 grid-rows-2">
           {isLoading ? (
             <>
