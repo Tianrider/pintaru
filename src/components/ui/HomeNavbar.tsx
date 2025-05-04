@@ -20,7 +20,8 @@ export default function HomeNavbar() {
 
   // Scroll animation setup
   const { scrollY } = useScroll();
-  const paddingY = useTransform(scrollY, [0, 100], [40, 12]); // py-6 to py-3
+  const paddingY = useTransform(scrollY, [0, 100], [24, 10]); // Reduced from [40, 12] to [24, 10]
+  const logoHeight = useTransform(scrollY, [0, 100], [8, 7]); // Controls logo size from h-8 to h-7
   const boxShadow = useTransform(scrollY, [0, 100], ['0 0 0 rgba(0,0,0,0)', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)']);
 
   useEffect(() => {
@@ -108,24 +109,24 @@ export default function HomeNavbar() {
       >
         <div className="flex items-center justify-between">
           <Link href="/">
-            <img src="/logo-expand.svg" alt="logo" className="h-12 w-auto" />
+            <motion.img src="/logo-expand.svg" alt="logo" style={{ height: useTransform(logoHeight, (h) => `${h * 0.25}rem`) }} className="w-auto" />
           </Link>
           <div className="flex items-center gap-4 pr-10">
             {!isLoading && user ? (
               <>
-                <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-12 rounded-lg">
+                <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-10 rounded-lg">
                   DASHBOARD
                 </button>
-                <button onClick={() => router.push('/auth/logout')} className="bg-white border cursor-pointer border-gray-300 text-gray-700 px-6 font-bold h-12 rounded-lg">
-                  <LogOutIcon className="w-6 h-6" />
+                <button onClick={() => router.push('/auth/logout')} className="bg-white border cursor-pointer border-gray-300 text-gray-700 px-6 font-bold h-10 rounded-lg">
+                  <LogOutIcon className="w-5 h-5" />
                 </button>
               </>
             ) : (
               <>
-                <button onClick={() => router.push('/auth/login')} className="bg-white border cursor-pointer border-primary-yellow text-primary-yellow px-6 font-bold h-12 rounded-lg">
+                <button onClick={() => router.push('/auth/login')} className="bg-white border cursor-pointer border-primary-yellow text-primary-yellow px-6 font-bold h-10 rounded-lg">
                   LOG IN
                 </button>
-                <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-12 rounded-lg">
+                <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-10 rounded-lg">
                   SIGN UP
                 </button>
               </>
@@ -148,10 +149,10 @@ export default function HomeNavbar() {
       >
         <div className="flex items-center relative justify-between">
           <Link href="/">
-            <img src="/logo-expand.svg" alt="logo" className="h-6 w-auto" />
+            <motion.img src="/logo-expand.svg" alt="logo" style={{ height: useTransform(logoHeight, (h) => `${h * 0.175}rem`) }} className="w-auto" />
           </Link>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 rounded-md hover:bg-gray-100" aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
           {/* Mobile Menu */}
@@ -160,19 +161,19 @@ export default function HomeNavbar() {
               <div className="flex flex-col p-4 gap-2">
                 {!isLoading && user ? (
                   <>
-                    <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow w-full cursor-pointer text-white py-3 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow w-full cursor-pointer text-white py-2.5 px-4 font-bold rounded-md">
                       Dashboard
                     </button>
-                    <button onClick={() => router.push('/auth/logout')} className="bg-white border w-full cursor-pointer border-gray-300 text-gray-700 py-3 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/auth/logout')} className="bg-white border w-full cursor-pointer border-gray-300 text-gray-700 py-2.5 px-4 font-bold rounded-md">
                       Logout
                     </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => router.push('/auth/login')} className="bg-white border w-full cursor-pointer border-primary-yellow text-primary-yellow py-3 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/auth/login')} className="bg-white border w-full cursor-pointer border-primary-yellow text-primary-yellow py-2.5 px-4 font-bold rounded-md">
                       Log In
                     </button>
-                    <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border w-full cursor-pointer text-white py-3 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border w-full cursor-pointer text-white py-2.5 px-4 font-bold rounded-md">
                       Sign Up
                     </button>
                   </>
