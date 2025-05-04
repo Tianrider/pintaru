@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { createStorybook } from '@/app/actions/storybook/storybook';
 import Image from 'next/image';
-import { Wand2 } from 'lucide-react';
+import { Wand2, Trophy } from 'lucide-react';
 import { useUser } from '@/app/hooks/useUser';
 import { useBooks } from '@/app/hooks/useBooks';
 import Link from 'next/link';
@@ -218,16 +218,21 @@ export default function KidsDashboard() {
                     </span>
                   ))}
                 </div>
-                <p className="text-gray-500 text-xs">
-                  Created at{' '}
-                  {new Date(book.created_at).toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-500 text-xs">
+                    Created at{' '}
+                    {new Date(book.created_at).toLocaleDateString('id-ID', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                  <span className="text-blue-500 text-xs font-medium flex items-center gap-1">
+                    +2 EXP <Trophy size={12} />
+                  </span>
+                </div>
               </div>
             </Link>
           ))
