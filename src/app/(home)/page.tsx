@@ -58,7 +58,7 @@ export default function Home() {
           </div>
 
           {/* Feature Blocks - Styled like dashboard cards */}
-          <div className="bg-gradient-to-r from-primary-blue to-blue-700 text-white px-4 sm:px-8 md:px-16 lg:px-58 py-10 sm:py-12 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-primary-blue to-blue-700 text-white px-4 sm:px-8 md:px-12 lg:px-16 py-10 sm:py-12 relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute -top-10 right-20 h-20 w-20 rounded-full bg-blue-400 opacity-20"></div>
             <div className="absolute -bottom-5 left-1/4 h-16 w-16 rounded-full bg-blue-400 opacity-10"></div>
