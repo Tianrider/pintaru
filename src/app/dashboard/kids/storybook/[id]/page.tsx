@@ -172,6 +172,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
       {/* Hidden preload section for images (will not be visible but ensures all images are loaded) */}
       <div className="hidden">
         {images.map((src, index) => (
+          // eslint-disable-next-line @next/next/no-img-element
           <img key={index} src={src} alt="Preload" />
         ))}
       </div>
