@@ -41,8 +41,8 @@ function SignInPage() {
 
   return (
     <div className="w-full px-8 md:px-12 items-center sm:justify-center">
-      <form action={clientAction} className="w-full border rounded-lg max-w-md mx-auto">
-        <Card className="w-full sm:w-full border-none shadow-none">
+      <form action={clientAction} className="w-full max-w-md mx-auto">
+        <Card className="w-full sm:w-full border-none shadow-xl bg-white/90 backdrop-blur-sm rounded-xl">
           <CardHeader className="">
             <div className="mx-auto flex justify-center mb-3">
               <Image src="/logo-expand.svg" className="w-1/2" alt="Jawab.in Logo" width={300} height={300} priority />

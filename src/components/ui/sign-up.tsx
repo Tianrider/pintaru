@@ -117,8 +117,8 @@ function SignUpPage() {
 
   return (
     <div className="w-full px-8 md:px-12 items-center sm:justify-center">
-      <form onSubmit={handleNextStep} className="w-full max-w-md mx-auto border rounded-lg">
-        <Card className="w-full sm:w-full border-none shadow-none">
+      <form onSubmit={handleNextStep} className="w-full max-w-md mx-auto">
+        <Card className="w-full sm:w-full border-none shadow-xl bg-white/90 backdrop-blur-sm rounded-xl">
           <CardHeader className="space-y-3">
             <div className="mx-auto flex justify-center mb-6">
               <Image src="/logo-expand.svg" className="w-1/2" alt="Jawab.in Logo" width={300} height={300} priority />
