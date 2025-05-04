@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRef, useState } from 'react';
-import { CircuitBoard, Globe, ImageIcon, Leaf, Sigma, Sparkles, Stethoscope, Video, X } from 'lucide-react';
+import { CircuitBoard, Globe, ImageIcon, Leaf, Sigma, Sparkles, Video, X } from 'lucide-react';
 import Image from 'next/image';
 
 interface PromptBarProps {
@@ -19,12 +19,8 @@ const recommendations = [
     text: 'Apa itu fotosintesis?',
   },
   {
-    icon: <Stethoscope className="text-blue-400" strokeWidth={3} size={16} />,
-    text: 'Bagaimana cara kanker paru-paru terjadi?',
-  },
-  {
-    icon: <CircuitBoard className="text-yellow-400" strokeWidth={3} size={16} />,
-    text: 'Bagaimana cara komputer menyimpan data?',
+    icon: <CircuitBoard className="text-blue-400" strokeWidth={3} size={16} />,
+    text: 'Bagaimana angka binary bekerja?',
   },
 ];
 
@@ -87,10 +83,10 @@ export default function PromptBar({ onVideoRequest }: PromptBarProps) {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center rounded-3xl shadow-lg border-2 border-gray-300 overflow-hidden">
       {/* Input form */}
       <form onSubmit={handleSubmit} className="flex w-full">
-        <div className="flex w-full pl-4 pr-1.5 rounded-full items-center relative border border-gray-200 bg-white py-1.5 text-base shadow-lg outline-none h-14">
+        <div className="flex w-full pl-4 pr-1.5 items-center relative bg-white py-1.5 text-base outline-none h-14">
           <Sparkles className="text-yellow-500" size={30} />
           <Input placeholder="Ketik atau upload soal di sini" className="!text-lg border-none shadow-none focus:ring-0" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
 
@@ -122,7 +118,7 @@ export default function PromptBar({ onVideoRequest }: PromptBarProps) {
       </form>
 
       {/* Suggestions */}
-      <div className="flex gap-2 overflow-x-auto hide-scrollbar w-4/5 py-2 bg-white rounded-b-2xl px-3 shadow-lg">
+      <div className="flex gap-2 overflow-x-auto hide-scrollbar w-full py-2 bg-white px-3 shadow-lg justify-center">
         {recommendations.map((rec, index) => (
           <RecommendationChip key={index} icon={rec.icon} text={rec.text} onClick={() => handleRecommendationClick(rec.text)} />
         ))}
