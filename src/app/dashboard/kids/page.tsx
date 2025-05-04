@@ -192,7 +192,7 @@ export default function KidsDashboard() {
       {/* Search box - Added more style */}
       <div className="mt-6">
         <div className="relative">
-          <input type="text" className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-300 focus:ring-2 focus:ring-amber-100 focus:outline-none transition-all shadow-sm" placeholder="Search your storybooks..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <input type="text" className="bg-white w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-300 focus:ring-2 focus:ring-amber-100 focus:outline-none transition-all shadow-sm" placeholder="Search your storybooks..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
               <circle cx="11" cy="11" r="8" />
