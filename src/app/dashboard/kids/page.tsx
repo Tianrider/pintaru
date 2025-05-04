@@ -19,6 +19,7 @@ export default function KidsDashboard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const isShowLatest = true;
 
   // Filter books based on search query
   const filteredBooks = books.filter((book) => book.title?.toLowerCase().includes(searchQuery.toLowerCase()) || book.theme?.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -204,7 +205,7 @@ export default function KidsDashboard() {
       {/* Books grid - Same functionality with improved styling */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBooks.length > 0 ? (
-          filteredBooks.map((book) => (
+          filteredBooks.slice(isShowLatest ? 0 : 1).map((book) => (
             <Link href={`/dashboard/kids/storybook/${book.id}`} key={book.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105 border-2 border-gray-100">
               <div className="relative pb-[66.67%]">
                 <Image src={book.cover || 'https://upload.wikimedia.org/wikipedia/commons/6/68/Solid_black.png'} alt={book.title || 'Storybook cover'} fill className="object-cover" />

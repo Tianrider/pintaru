@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Home, ArrowLeft, BookOpen } from 'lucide-react';
 import { useBook } from '@/app/hooks/useBook';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BookPage({ params }: { params: Promise<{ id: string }> }) {
   // Unwrap params using React.use()
@@ -15,6 +16,8 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [images, setImages] = useState<string[]>([]);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
+  const [direction, setDirection] = useState(0); // -1 for left, 1 for right
+  const [previousImage, setPreviousImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (book) {
@@ -25,7 +28,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
     }
   }, [book]);
 
-  // Preload all images
+  // Preload all images and show loading state
   useEffect(() => {
     if (images.length === 0) return;
 
@@ -41,6 +44,10 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
 
       Promise.all(imagePromises).then(() => {
         setAllImagesLoaded(true);
+        // Set previous image to the first image to avoid white flash on first animation
+        if (images.length > 0) {
+          setPreviousImage(images[0]);
+        }
       });
     };
 
@@ -49,14 +56,70 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
 
   const goToNextImage = () => {
     if (currentImageIndex < images.length - 1) {
+      setPreviousImage(images[currentImageIndex]); // Store current image before changing
+      setDirection(1);
       setCurrentImageIndex(currentImageIndex + 1);
     }
   };
 
   const goToPrevImage = () => {
     if (currentImageIndex > 0) {
+      setPreviousImage(images[currentImageIndex]); // Store current image before changing
+      setDirection(-1);
       setCurrentImageIndex(currentImageIndex - 1);
     }
+  };
+
+  // Page flip animation variants with optimized timing
+  const variants = {
+    enter: (direction: number) => {
+      return {
+        x: direction > 0 ? 1000 : -1000,
+        opacity: 0.75, // Increase starting opacity to reduce white flash
+        rotateY: direction > 0 ? 45 : -45,
+        boxShadow: direction > 0 ? '50px 0px 20px rgba(0, 0, 0, 0.1)' : '-50px 0px 20px rgba(0, 0, 0, 0.1)',
+        filter: 'brightness(0.8)',
+      };
+    },
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      rotateY: 0,
+      boxShadow: '0px 0px 0px rgba(0, 0, 0, 0)',
+      filter: 'brightness(1)',
+      transition: {
+        x: { type: 'spring', stiffness: 300, damping: 30 },
+        opacity: { duration: 0.15 }, // Even faster opacity transition
+        rotateY: { duration: 0.5 },
+        boxShadow: { duration: 0.5 },
+        filter: { duration: 0.5 },
+      },
+    },
+    exit: (direction: number) => {
+      return {
+        zIndex: 0,
+        x: direction < 0 ? 1000 : -1000,
+        opacity: 0.75, // Higher exit opacity for smoother transition
+        rotateY: direction < 0 ? 45 : -45,
+        boxShadow: direction < 0 ? '50px 0px 20px rgba(0, 0, 0, 0.1)' : '-50px 0px 20px rgba(0, 0, 0, 0.1)',
+        filter: 'brightness(0.8)',
+        transition: {
+          x: { type: 'spring', stiffness: 300, damping: 30 },
+          opacity: { duration: 0.15 }, // Even faster opacity transition
+          rotateY: { duration: 0.5 },
+          boxShadow: { duration: 0.5 },
+          filter: { duration: 0.5 },
+        },
+      };
+    },
+  };
+
+  // Handle pagination dot click with animation direction
+  const handlePaginationClick = (index: number) => {
+    setPreviousImage(images[currentImageIndex]); // Store current image before changing
+    setDirection(index > currentImageIndex ? 1 : -1);
+    setCurrentImageIndex(index);
   };
 
   if (isLoading) {
@@ -128,8 +191,85 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
         <div className="absolute -top-2 -right-2 h-12 w-12 rounded-full bg-yellow-100 opacity-40"></div>
         <div className="absolute -bottom-2 -left-2 h-12 w-12 rounded-full bg-blue-100 opacity-40"></div>
 
-        {/* Image display - Using div with background instead of Image component for better preloading */}
-        <div className="relative aspect-[3/2] w-full max-w-4xl mx-auto p-2">{images.length > 0 && <div className="w-full h-full rounded-lg bg-center bg-contain bg-no-repeat" style={{ backgroundImage: `url(${images[currentImageIndex]})` }}></div>}</div>
+        {/* Background book appearance for 3D effect */}
+        <div
+          className="absolute inset-0 mx-auto"
+          style={{
+            backgroundImage: 'linear-gradient(to right, rgba(240, 240, 240, 0.8), rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8))',
+            borderRadius: '8px',
+            boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.1)',
+          }}
+        />
+
+        {/* Previous image as backdrop (helps prevent white flash) */}
+        {previousImage && (
+          <div
+            className="absolute inset-0 opacity-20" // Increased opacity
+            style={{
+              backgroundImage: `url(${previousImage})`,
+              backgroundPosition: 'center',
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              filter: 'blur(1px)', // Less blur for cleaner transition
+            }}
+          />
+        )}
+
+        {/* Image display with page flip animation */}
+        <div
+          className="relative aspect-[3/2] w-full max-w-4xl mx-auto p-2 overflow-hidden"
+          style={{
+            perspective: '1200px',
+            transformStyle: 'preserve-3d',
+            backgroundColor: '#f8f8f8', // Lighter background color
+          }}
+        >
+          {/* Preload the next and previous images in DOM for instant transitions */}
+          <div className="hidden">
+            {currentImageIndex > 0 && <div style={{ backgroundImage: `url(${images[currentImageIndex - 1]})` }} />}
+            {currentImageIndex < images.length - 1 && <div style={{ backgroundImage: `url(${images[currentImageIndex + 1]})` }} />}
+          </div>
+
+          <AnimatePresence initial={false} custom={direction} mode="sync">
+            <motion.div
+              key={currentImageIndex}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute top-0 left-0 w-full h-full p-2"
+              style={{
+                transformStyle: 'preserve-3d',
+                backfaceVisibility: 'hidden',
+                transformOrigin: direction > 0 ? 'left center' : 'right center',
+              }}
+            >
+              <div
+                className="w-full h-full bg-center bg-contain bg-no-repeat"
+                style={{
+                  backgroundImage: `url(${images[currentImageIndex]})`,
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid rgba(0, 0, 0, 0.05)',
+                }}
+              />
+              {/* Page curl effect */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  width: '30px',
+                  height: '100%',
+                  right: direction > 0 ? 0 : 'auto',
+                  left: direction > 0 ? 'auto' : 0,
+                  top: 0,
+                  background: 'linear-gradient(to right, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0))',
+                  transform: direction > 0 ? 'scaleX(-1)' : 'scaleX(1)',
+                  opacity: 0.8,
+                }}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         {/* Page number indicator */}
         <div className="absolute bottom-4 left-0 right-0 text-center">
@@ -157,7 +297,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
       {/* Bottom pagination dots - enhanced */}
       <div className="flex justify-center gap-2 mt-8">
         {images.map((_, index) => (
-          <button key={index} className={`transition-all ${currentImageIndex === index ? 'h-3 w-10 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full shadow-md' : 'h-3 w-3 bg-gray-300 hover:bg-gray-400 rounded-full hover:scale-110'}`} onClick={() => setCurrentImageIndex(index)} aria-label={`Go to page ${index === 0 ? 'cover' : index}`} />
+          <button key={index} className={`transition-all ${currentImageIndex === index ? 'h-3 w-10 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full shadow-md' : 'h-3 w-3 bg-gray-300 hover:bg-gray-400 rounded-full hover:scale-110'}`} onClick={() => handlePaginationClick(index)} aria-label={`Go to page ${index === 0 ? 'cover' : index}`} />
         ))}
       </div>
 
