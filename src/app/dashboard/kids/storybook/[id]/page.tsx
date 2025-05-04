@@ -246,7 +246,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
               }}
             >
               <div
-                className="w-full h-full rounded-lg bg-center bg-contain bg-no-repeat"
+                className="w-full h-full bg-center bg-contain bg-no-repeat"
                 style={{
                   backgroundImage: `url(${images[currentImageIndex]})`,
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
