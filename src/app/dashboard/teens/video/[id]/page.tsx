@@ -138,7 +138,7 @@ export default function VideoPage() {
         video.removeEventListener('error', handleVideoError);
       };
     }
-  }, []);
+  }, [captureFrame]);
 
   // Render loading skeleton
   if (loading) {

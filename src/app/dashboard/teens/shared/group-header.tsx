@@ -1,6 +1,5 @@
 import { ChevronRightIcon, VideoIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 const GroupHeader = ({ title }: { title: string }) => {
   const router = useRouter();
@@ -17,10 +16,7 @@ const GroupHeader = ({ title }: { title: string }) => {
         <h2 className="text-white text-xl font-bold">{title}</h2>
       </div>
 
-      <button 
-        onClick={() => router.push('/dashboard/teens/community')}
-        className="bg-blue-500 hover:bg-blue-600 text-white pl-4 pr-3 py-2 rounded-full flex items-center gap-1 transition-all transform hover:scale-105 border border-blue-400 shadow-md"
-      >
+      <button onClick={() => router.push('/dashboard/teens/community')} className="bg-blue-500 hover:bg-blue-600 text-white pl-4 pr-3 py-2 rounded-full flex items-center gap-1 transition-all transform hover:scale-105 border border-blue-400 shadow-md">
         <p className="font-bold">Lihat Semua</p>
         <ChevronRightIcon size={20} strokeWidth={3} />
       </button>

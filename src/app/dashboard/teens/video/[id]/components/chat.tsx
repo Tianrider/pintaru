@@ -6,6 +6,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
 import 'katex/dist/katex.min.css';
+import Image from 'next/image';
 
 interface ChatProps {
   imageData?: string | null;
@@ -29,7 +30,7 @@ const resizeImage = (dataUrl: string, maxWidth = 800, maxHeight = 800, quality =
         return;
       }
 
-      const img = new Image();
+      const img = new globalThis.Image();
       img.onload = () => {
         try {
           let width = img.width;
@@ -289,7 +290,7 @@ export default function Chat({ imageData, timestamp }: ChatProps) {
                     const filePart = part as FilePart;
                     return (
                       <div key={`${message.id}-file-${i}`} className="mt-2">
-                        <img src={`data:${filePart.mimeType};base64,${filePart.data}`} alt="Image content" className="max-h-60 w-auto rounded-lg" />
+                        <Image src={`data:${filePart.mimeType};base64,${filePart.data}`} alt="Image content" className="max-h-60 w-auto rounded-lg" width={300} height={200} style={{ width: 'auto', maxHeight: '240px' }} />
                       </div>
                     );
                   }
