@@ -130,7 +130,7 @@ const VideoList = forwardRef<VideoListRef, VideoListProps>(({ isCommunity = fals
         </div>
         <div className="w-full md:w-[30%]">
           <div className="relative">
-            <MultiSelect placeholder="Pilih Mata Pelajaran" options={subjects} value={selectedSubjects} onChange={handleSubjectsChange} className="w-full rounded-full shadow-sm flex px-2 items-center hover:shadow-md transition-all duration-200 text-base h-auto min-h-12" badgeClassName="my-1" />
+            <MultiSelect placeholder="Pilih Mata Pelajaran" options={subjects} value={selectedSubjects} onChange={handleSubjectsChange} className="bg-white w-full rounded-full shadow-sm flex px-2 items-center hover:shadow-md transition-all duration-200 text-base h-auto min-h-12" badgeClassName="my-1" />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
                 <path d="m6 9 6 6 6-6" />
