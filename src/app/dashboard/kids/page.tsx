@@ -177,11 +177,9 @@ export default function KidsDashboard() {
 
       {/* Progress bar section - kept the same functionality with improved styling */}
       {isGenerating && (
-        <div className="mt-20 max-w-2xl mx-auto bg-white p-6 rounded-xl border-2 border-blue-100 shadow-md">
+        <div className="mt-6 max-w-2xl mx-auto bg-white p-6 rounded-xl border-2 border-blue-100 shadow-md w-xl">
           <div className="bg-gray-100 rounded-full h-6 mb-4 overflow-hidden border border-gray-200">
-            <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-6 rounded-full flex items-center justify-center text-xs text-white font-bold" style={{ width: `${(currentStep / totalSteps) * 100}%` }}>
-              {Math.round((currentStep / totalSteps) * 100)}%
-            </div>
+            <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-6 rounded-full flex items-center justify-center text-xs text-white font-bold" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
           </div>
           <p className="text-gray-700 text-center font-medium">
             Step {currentStep} of {totalSteps}: {progressStatus}
@@ -190,7 +188,7 @@ export default function KidsDashboard() {
       )}
 
       {/* Search box - Added more style */}
-      <div className="mt-6">
+      <div className={isGenerating ? 'mt-0' : 'mt-6'}>
         <div className="relative">
           <input type="text" className="bg-white w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-300 focus:ring-2 focus:ring-amber-100 focus:outline-none transition-all shadow-sm" placeholder="Search your storybooks..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
