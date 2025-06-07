@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Home, ArrowLeft, BookOpen, Download } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, ArrowLeft, BookOpen, Download, Loader2 } from 'lucide-react';
 import { useBook } from '@/app/hooks/useBook';
 import { motion, AnimatePresence } from 'framer-motion';
 import jsPDF from 'jspdf';
@@ -19,6 +19,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right
   const [previousImage, setPreviousImage] = useState<string | null>(null);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
 
   useEffect(() => {
     if (book) {
@@ -125,7 +126,9 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
 
   // Download as PDF function
   const downloadAsPDF = async () => {
-    if (!images.length || !book) return;
+    if (!images.length || !book || isDownloadingPDF) return;
+
+    setIsDownloadingPDF(true);
 
     try {
       const pdf = new jsPDF({
@@ -185,6 +188,8 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Error generating PDF. Please try again.');
+    } finally {
+      setIsDownloadingPDF(false);
     }
   };
 
@@ -376,9 +381,9 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
           <p className="font-bold">Kembali ke Dashboard</p>
         </Link>
 
-        <button onClick={downloadAsPDF} disabled={!allImagesLoaded || !images.length} className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white pl-4 pr-5 py-3 rounded-full flex items-center gap-2 transition-all transform hover:scale-105 border border-yellow-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-          <Download size={18} />
-          <p className="font-bold">Download as PDF</p>
+        <button onClick={downloadAsPDF} disabled={!allImagesLoaded || !images.length || isDownloadingPDF} className={`bg-gradient-to-r from-yellow-400 to-yellow-500 text-white pl-4 pr-5 py-3 rounded-full flex items-center gap-2 transition-all transform border border-yellow-300 shadow-md disabled:cursor-not-allowed ${isDownloadingPDF ? 'opacity-60 scale-95' : 'hover:scale-105 disabled:opacity-50 disabled:transform-none'}`}>
+          {isDownloadingPDF ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+          <p className="font-bold">{isDownloadingPDF ? 'Generating PDF...' : 'Download as PDF'}</p>
         </button>
       </div>
 
