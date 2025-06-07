@@ -145,22 +145,22 @@ export default function VideoPage() {
     return (
       <div className="w-full max-w-7xl mx-auto py-8 gap-8 grid grid-cols-1 lg:grid-cols-5 px-4 md:px-8">
         <div className="lg:col-span-3">
-          <Skeleton className="w-full aspect-video rounded-xl" />
+          <Skeleton className="w-full aspect-video rounded-xl min-h-[300px]" />
           <div className="mt-6">
-            <Skeleton className="w-2/3 h-8 mb-3" />
-            <Skeleton className="w-full h-24" />
+            <Skeleton className="w-2/3 h-8 mb-3 min-w-[300px]" />
+            <Skeleton className="w-full h-24 min-h-[96px]" />
           </div>
           <div className="mt-8">
-            <Skeleton className="w-48 h-7 mb-4" />
+            <Skeleton className="w-48 h-7 mb-4 min-w-[192px]" />
             <div className="grid grid-cols-3 gap-4">
-              <Skeleton className="h-36 w-full rounded-xl" />
-              <Skeleton className="h-36 w-full rounded-xl" />
-              <Skeleton className="h-36 w-full rounded-xl" />
+              <Skeleton className="h-36 w-full rounded-xl min-h-[144px]" />
+              <Skeleton className="h-36 w-full rounded-xl min-h-[144px]" />
+              <Skeleton className="h-36 w-full rounded-xl min-h-[144px]" />
             </div>
           </div>
         </div>
         <div className="lg:col-span-2 mt-8 lg:mt-0">
-          <Skeleton className="w-full h-[70vh] rounded-xl" />
+          <Skeleton className="w-full h-[70vh] rounded-xl min-h-[500px]" />
         </div>
       </div>
     );

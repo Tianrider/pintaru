@@ -251,20 +251,58 @@ export default function Chat({ imageData, timestamp }: ChatProps) {
             <div className={`whitespace-pre-wrap p-4 rounded-lg max-w-[80%] ${message.role === 'user' ? 'bg-blue-300/50 rounded-tr-none' : 'bg-gray-100 border border-gray-200 rounded-tl-none'}`}>
               {message.role === 'user' ? (
                 typeof message.content === 'string' ? (
-                  <div>{message.content}</div>
+                  <div className="text-sm">{message.content}</div>
                 ) : (
                   message.parts.map((part, i) => {
                     if (part.type === 'text') {
-                      return <div key={`${message.id}-${i}`}>{(part as { text: string }).text}</div>;
+                      return (
+                        <div key={`${message.id}-${i}`} className="text-sm">
+                          {(part as { text: string }).text}
+                        </div>
+                      );
                     }
-                    // Handle other part types as needed
                     return null;
                   })
                 )
               ) : (
-                // Use ReactMarkdown for AI responses
-                <div className="prose prose-sm max-w-none prose-pre:bg-gray-800 prose-pre:text-gray-100 prose-headings:mb-1 prose-p:mb-2">
-                  <ReactMarkdown remarkPlugins={[remarkMath, remarkGfm]} rehypePlugins={[rehypeKatex]}>
+                <div className="text-sm leading-relaxed prose prose-sm max-w-none 
+                  prose-pre:bg-gray-800 prose-pre:text-gray-100 
+                  prose-headings:my-1 prose-headings:font-semibold
+                  prose-p:my-1 prose-p:leading-relaxed
+                  prose-ul:my-1 prose-ol:my-1
+                  prose-li:my-0 prose-li:leading-relaxed
+                  prose-code:text-xs prose-code:px-1 prose-code:py-0.5
+                  prose-strong:font-semibold
+                  [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
+                  [&_.katex]:text-sm [&_.katex-display]:my-2">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm, remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                    components={{
+                      p: ({ children }) => <p className="my-1">{children}</p>,
+                      h1: ({ children }) => <h1 className="text-lg font-bold my-1">{children}</h1>,
+                      h2: ({ children }) => <h2 className="text-base font-bold my-1">{children}</h2>,
+                      h3: ({ children }) => <h3 className="text-sm font-bold my-1">{children}</h3>,
+                      ul: ({ children }) => <ul className="list-disc list-inside my-1 space-y-0.5">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal list-inside my-1 space-y-0.5">{children}</ol>,
+                      li: ({ children }) => <li className="my-0">{children}</li>,
+                      blockquote: ({ children }) => <blockquote className="border-l-2 border-gray-300 pl-3 my-1">{children}</blockquote>,
+                      code: ({ className, children, ...props }) => {
+                        const match = /language-(\w+)/.exec(className || '');
+                        return match ? (
+                          <pre className="bg-gray-800 text-gray-100 p-2 rounded text-xs overflow-x-auto my-1">
+                            <code className={className} {...props}>
+                              {children}
+                            </code>
+                          </pre>
+                        ) : (
+                          <code className="bg-gray-100 text-red-600 px-1 py-0.5 rounded text-xs" {...props}>
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  >
                     {typeof message.content === 'string'
                       ? message.content
                       : message.parts

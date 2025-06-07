@@ -4,9 +4,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Home, ArrowLeft, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, ArrowLeft, BookOpen, Download, Loader2 } from 'lucide-react';
 import { useBook } from '@/app/hooks/useBook';
 import { motion, AnimatePresence } from 'framer-motion';
+import jsPDF from 'jspdf';
 
 export default function BookPage({ params }: { params: Promise<{ id: string }> }) {
   // Unwrap params using React.use()
@@ -18,6 +19,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right
   const [previousImage, setPreviousImage] = useState<string | null>(null);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
 
   useEffect(() => {
     if (book) {
@@ -122,12 +124,83 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
     setCurrentImageIndex(index);
   };
 
+  // Download as PDF function
+  const downloadAsPDF = async () => {
+    if (!images.length || !book || isDownloadingPDF) return;
+
+    setIsDownloadingPDF(true);
+
+    try {
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      // A4 landscape dimensions in mm
+      const pageWidth = 297;
+      const pageHeight = 210;
+      const margin = 10;
+      const imageWidth = pageWidth - margin * 2;
+      const imageHeight = pageHeight - margin * 2;
+
+      for (let i = 0; i < images.length; i++) {
+        const imageUrl = images[i];
+
+        // Create a promise to load the image
+        const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+          const imgElement = new Image();
+          imgElement.crossOrigin = 'anonymous';
+          imgElement.onload = () => resolve(imgElement);
+          imgElement.onerror = reject;
+          imgElement.src = imageUrl;
+        });
+
+        // Calculate aspect ratio to maintain image proportions
+        const aspectRatio = img.width / img.height;
+        let finalWidth = imageWidth;
+        let finalHeight = imageWidth / aspectRatio;
+
+        // If height exceeds page height, scale down
+        if (finalHeight > imageHeight) {
+          finalHeight = imageHeight;
+          finalWidth = imageHeight * aspectRatio;
+        }
+
+        // Center the image on the page
+        const x = (pageWidth - finalWidth) / 2;
+        const y = (pageHeight - finalHeight) / 2;
+
+        // Add new page for each image except the first one
+        if (i > 0) {
+          pdf.addPage();
+        }
+
+        // Add image to PDF
+        pdf.addImage(img, 'JPEG', x, y, finalWidth, finalHeight);
+      }
+
+      // Generate filename
+      const filename = `${book.title || 'Untitled Storybook'} - PINTARU.pdf`;
+
+      // Download the PDF
+      pdf.save(filename);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    } finally {
+      setIsDownloadingPDF(false);
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">
-          <div className="h-64 w-96 bg-gray-200 rounded-xl"></div>
-          <div className="h-6 w-48 mt-4 bg-gray-200 rounded-full"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="text-center mb-8 flex flex-col items-center justify-center">
+          <div className="text-amber-500 mb-4 animate-bounce">
+            <BookOpen size={48} />
+          </div>
+          <h2 className="text-2xl font-bold text-blue-800 mb-4">Loading your storybook...</h2>
         </div>
       </div>
     );
@@ -301,12 +374,17 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
         ))}
       </div>
 
-      {/* Back to Dashboard Button */}
-      <div className="mt-8 flex justify-center">
+      {/* Back to Dashboard and Download PDF Buttons */}
+      <div className="mt-8 flex justify-center gap-4">
         <Link href="/dashboard/kids" className="bg-gradient-to-r from-blue-500 to-blue-600 text-white pl-4 pr-5 py-3 rounded-full flex items-center gap-2 transition-all transform hover:scale-105 border border-blue-400 shadow-md">
           <Home size={18} />
           <p className="font-bold">Kembali ke Dashboard</p>
         </Link>
+
+        <button onClick={downloadAsPDF} disabled={!allImagesLoaded || !images.length || isDownloadingPDF} className={`bg-gradient-to-r from-yellow-400 to-yellow-500 text-white pl-4 pr-5 py-3 rounded-full flex items-center gap-2 transition-all transform border border-yellow-300 shadow-md disabled:cursor-not-allowed ${isDownloadingPDF ? 'opacity-60 scale-95' : 'hover:scale-105 disabled:opacity-50 disabled:transform-none'}`}>
+          {isDownloadingPDF ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+          <p className="font-bold">{isDownloadingPDF ? 'Generating PDF...' : 'Download as PDF'}</p>
+        </button>
       </div>
 
       {/* Hidden preload section for images (will not be visible but ensures all images are loaded) */}

@@ -1,7 +1,7 @@
 'use client';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { Home, LogIn, LogOut, LogOutIcon, Menu, X } from 'lucide-react';
+import { Home, LogIn, LogOut, LogOutIcon, Menu, X, LayoutDashboard, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
@@ -113,7 +113,8 @@ export default function HomeNavbar() {
           <div className="flex items-center gap-4 pr-10">
             {!isLoading && user ? (
               <>
-                <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-10 rounded-lg">
+                <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-10 rounded-lg flex items-center gap-2">
+                  <LayoutDashboard className="w-4 h-4" />
                   DASHBOARD
                 </button>
                 <button onClick={() => router.push('/auth/logout')} className="bg-white border cursor-pointer border-gray-300 text-gray-700 px-6 font-bold h-10 rounded-lg">
@@ -122,10 +123,12 @@ export default function HomeNavbar() {
               </>
             ) : (
               <>
-                <button onClick={() => router.push('/auth/login')} className="bg-white border cursor-pointer border-primary-yellow text-primary-yellow px-6 font-bold h-10 rounded-lg">
+                <button onClick={() => router.push('/auth/login')} className="bg-white border cursor-pointer border-primary-yellow text-primary-yellow px-6 font-bold h-10 rounded-lg flex items-center gap-2">
+                  <LogIn className="w-4 h-4" />
                   LOG IN
                 </button>
-                <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-10 rounded-lg">
+                <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border cursor-pointer text-white px-6 font-bold h-10 rounded-lg flex items-center gap-2">
+                  <UserPlus className="w-4 h-4" />
                   SIGN UP
                 </button>
               </>
@@ -160,19 +163,23 @@ export default function HomeNavbar() {
               <div className="flex flex-col p-4 gap-2">
                 {!isLoading && user ? (
                   <>
-                    <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow w-full cursor-pointer text-white py-2.5 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/dashboard')} className="bg-primary-yellow w-full cursor-pointer text-white py-2.5 px-4 font-bold rounded-md flex items-center justify-center gap-2">
+                      <LayoutDashboard className="w-4 h-4" />
                       Dashboard
                     </button>
-                    <button onClick={() => router.push('/auth/logout')} className="bg-white border w-full cursor-pointer border-gray-300 text-gray-700 py-2.5 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/auth/logout')} className="bg-white border w-full cursor-pointer border-gray-300 text-gray-700 py-2.5 px-4 font-bold rounded-md flex items-center justify-center gap-2">
+                      <LogOutIcon className="w-4 h-4" />
                       Logout
                     </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => router.push('/auth/login')} className="bg-white border w-full cursor-pointer border-primary-yellow text-primary-yellow py-2.5 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/auth/login')} className="bg-white border w-full cursor-pointer border-primary-yellow text-primary-yellow py-2.5 px-4 font-bold rounded-md flex items-center justify-center gap-2">
+                      <LogIn className="w-4 h-4" />
                       Log In
                     </button>
-                    <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border w-full cursor-pointer text-white py-2.5 px-4 font-bold rounded-md">
+                    <button onClick={() => router.push('/auth/register')} className="bg-primary-yellow border w-full cursor-pointer text-white py-2.5 px-4 font-bold rounded-md flex items-center justify-center gap-2">
+                      <UserPlus className="w-4 h-4" />
                       Sign Up
                     </button>
                   </>

@@ -17,41 +17,43 @@ export default function Home() {
             <div className="absolute top-40 left-10 h-16 w-16 rounded-full bg-blue-100 opacity-40"></div>
             <div className="absolute bottom-20 left-20 h-32 w-32 rounded-full bg-primary-yellow/10 opacity-40"></div>
 
-            <div className="w-full flex flex-col-reverse md:flex-row-reverse gap-8 md:gap-12 items-center z-10 max-w-6xl">
-              <div className="w-full md:w-1/2 rounded-xl bg-white p-4 md:p-6 h-[250px] sm:h-[300px] md:h-[450px] flex items-center justify-center shadow-lg border-2 border-gray-100 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <MacbookPro src="/demo.gif" className="w-full h-full rounded-lg" />
+            <div className="w-full space-y-4 sm:space-y-6 z-10 max-w-[1000px]">
+              <div className="flex gap-2 items-center">
+                <div className="bg-primary-yellow/20 rounded-full w-fit px-4 py-1.5 text-gray-700 border border-amber-200 flex items-center gap-2">
+                  <Stars size={16} className="text-amber-500" />
+                  <span className="font-medium">Video & Cerita Interaktif</span>
+                </div>
               </div>
 
-              <div className="w-full md:w-1/2 space-y-4 sm:space-y-6 md:max-w-[90%]">
-                <div className="flex gap-2 items-center">
-                  <div className="bg-primary-yellow/20 rounded-full w-fit px-4 py-1.5 text-gray-700 border border-amber-200 flex items-center gap-2">
-                    <Stars size={16} className="text-amber-500" />
-                    <span className="font-medium">Video & Cerita Interaktif</span>
-                  </div>
+              <h1 className="text-3xl sm:text-4xl leading-tight md:text-5xl lg:text-6xl font-bold text-gray-900">
+                <span className="text-primary-blue">
+                  Belajar Lebih
+                  <span className="font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-600 ml-4">MENYENANGKAN!</span>
+                </span>
+              </h1>
+
+              <div className="flex flex-col-reverse md:flex-row-reverse gap-8 md:gap-12 items-center">
+                <div className="w-full md:w-1/2 rounded-xl bg-white p-4 md:p-6 h-[174px] sm:h-[224px] md:h-[374px] flex items-center justify-center shadow-lg border-2 border-gray-100 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <MacbookPro src="/demo.gif" className="w-full h-full rounded-lg" />
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl leading-tight md:text-5xl lg:text-6xl font-bold text-gray-900">
-                  <span className="text-primary-blue">
-                    Belajar Lebih <br />
-                    <span className="font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-600">MENYENANGKAN!</span>
-                  </span>
-                </h1>
+                <div className="w-full md:w-1/2 space-y-4 sm:space-y-6">
+                  <p className="text-base sm:text-xl text-gray-700 leading-relaxed">
+                    Dengan <span className="font-bold text-primary-blue">PINTARU</span>, cukup ketik atau unggah soal, dan kamu akan langsung mendapatkan penjelasan visual berbentuk video atau cerita interaktif. Cocok untuk anak-anak, pelajar, dan siapa pun yang ingin belajar dengan cara yang berbeda.
+                  </p>
 
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed lg:w-xl">
-                  Dengan <span className="font-bold text-primary-blue">PINTARU</span>, cukup ketik atau unggah soal, dan kamu akan langsung mendapatkan penjelasan visual berbentuk video atau cerita interaktif. Cocok untuk anak-anak, pelajar, dan siapa pun yang ingin belajar dengan cara yang berbeda.
-                </p>
+                  <div className="pt-4 flex flex-wrap justify-between">
+                    <Button asChild size="lg" className="w-[48%] bg-gradient-to-r from-amber-400 to-amber-500 py-6 text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-amber-300 hover:border-amber-400 rounded-full transform hover:scale-105 flex items-center gap-2">
+                      <Link href="/dashboard flex-shrink-0">
+                        <Wand2 size={20} className="mr-1 flex-shrink-0" />
+                        Belajar Sekarang!
+                      </Link>
+                    </Button>
 
-                <div className="pt-4 flex flex-wrap justify-between">
-                  <Button asChild size="lg" className="w-[48%] bg-gradient-to-r from-amber-400 to-amber-500 py-6 text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-amber-300 hover:border-amber-400 rounded-full transform hover:scale-105 flex items-center gap-2">
-                    <Link href="/dashboard flex-shrink-0">
-                      <Wand2 size={20} className="mr-1 flex-shrink-0" />
-                      Belajar Sekarang!
-                    </Link>
-                  </Button>
-
-                  <Button asChild variant="outline" size="lg" className="w-[48%] py-6 text-lg font-medium border-2 border-gray-300 hover:border-primary-blue text-gray-700 hover:text-primary-blue rounded-full transition-all duration-300 transform hover:scale-105">
-                    <Link href="#about">Pelajari Selengkapnya</Link>
-                  </Button>
+                    <Button asChild variant="outline" size="lg" className="w-[48%] py-6 text-lg font-medium border-2 border-gray-300 hover:border-primary-blue text-gray-700 hover:text-primary-blue rounded-full transition-all duration-300 transform hover:scale-105">
+                      <Link href="#about">Pelajari Selengkapnya</Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

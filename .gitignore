@@ -46,3 +46,6 @@ bun.lockb
 
 # bash scripts
 *.sh
+
+# references
+.references/
