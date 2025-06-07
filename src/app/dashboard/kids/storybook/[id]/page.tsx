@@ -4,9 +4,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Home, ArrowLeft, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, ArrowLeft, BookOpen, Download } from 'lucide-react';
 import { useBook } from '@/app/hooks/useBook';
 import { motion, AnimatePresence } from 'framer-motion';
+import jsPDF from 'jspdf';
 
 export default function BookPage({ params }: { params: Promise<{ id: string }> }) {
   // Unwrap params using React.use()
@@ -120,6 +121,71 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
     setPreviousImage(images[currentImageIndex]); // Store current image before changing
     setDirection(index > currentImageIndex ? 1 : -1);
     setCurrentImageIndex(index);
+  };
+
+  // Download as PDF function
+  const downloadAsPDF = async () => {
+    if (!images.length || !book) return;
+
+    try {
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      // A4 landscape dimensions in mm
+      const pageWidth = 297;
+      const pageHeight = 210;
+      const margin = 10;
+      const imageWidth = pageWidth - margin * 2;
+      const imageHeight = pageHeight - margin * 2;
+
+      for (let i = 0; i < images.length; i++) {
+        const imageUrl = images[i];
+
+        // Create a promise to load the image
+        const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+          const imgElement = new Image();
+          imgElement.crossOrigin = 'anonymous';
+          imgElement.onload = () => resolve(imgElement);
+          imgElement.onerror = reject;
+          imgElement.src = imageUrl;
+        });
+
+        // Calculate aspect ratio to maintain image proportions
+        const aspectRatio = img.width / img.height;
+        let finalWidth = imageWidth;
+        let finalHeight = imageWidth / aspectRatio;
+
+        // If height exceeds page height, scale down
+        if (finalHeight > imageHeight) {
+          finalHeight = imageHeight;
+          finalWidth = imageHeight * aspectRatio;
+        }
+
+        // Center the image on the page
+        const x = (pageWidth - finalWidth) / 2;
+        const y = (pageHeight - finalHeight) / 2;
+
+        // Add new page for each image except the first one
+        if (i > 0) {
+          pdf.addPage();
+        }
+
+        // Add image to PDF
+        pdf.addImage(img, 'JPEG', x, y, finalWidth, finalHeight);
+      }
+
+      // Generate filename
+      const filename = `${book.title || 'Untitled Storybook'} - PINTARU.pdf`;
+
+      // Download the PDF
+      pdf.save(filename);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    }
   };
 
   if (isLoading) {
@@ -303,12 +369,17 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
         ))}
       </div>
 
-      {/* Back to Dashboard Button */}
-      <div className="mt-8 flex justify-center">
+      {/* Back to Dashboard and Download PDF Buttons */}
+      <div className="mt-8 flex justify-center gap-4">
         <Link href="/dashboard/kids" className="bg-gradient-to-r from-blue-500 to-blue-600 text-white pl-4 pr-5 py-3 rounded-full flex items-center gap-2 transition-all transform hover:scale-105 border border-blue-400 shadow-md">
           <Home size={18} />
           <p className="font-bold">Kembali ke Dashboard</p>
         </Link>
+
+        <button onClick={downloadAsPDF} disabled={!allImagesLoaded || !images.length} className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white pl-4 pr-5 py-3 rounded-full flex items-center gap-2 transition-all transform hover:scale-105 border border-yellow-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          <Download size={18} />
+          <p className="font-bold">Download as PDF</p>
+        </button>
       </div>
 
       {/* Hidden preload section for images (will not be visible but ensures all images are loaded) */}
