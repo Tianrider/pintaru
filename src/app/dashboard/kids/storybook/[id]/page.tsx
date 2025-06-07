@@ -124,10 +124,12 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">
-          <div className="h-64 w-96 bg-gray-200 rounded-xl"></div>
-          <div className="h-6 w-48 mt-4 bg-gray-200 rounded-full"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="text-center mb-8 flex flex-col items-center justify-center">
+          <div className="text-amber-500 mb-4 animate-bounce">
+            <BookOpen size={48} />
+          </div>
+          <h2 className="text-2xl font-bold text-blue-800 mb-4">Loading your storybook...</h2>
         </div>
       </div>
     );
