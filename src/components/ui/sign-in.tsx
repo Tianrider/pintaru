@@ -1,94 +1,100 @@
 'use client';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { login } from '@/app/actions/auth';
+import { anonymousLogin } from '@/app/actions/auth';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { useFormStatus } from 'react-dom';
-import { Eye, EyeOff, KeyRound, Mail } from 'lucide-react';
+import { Video, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button type="submit" disabled={pending} className="w-full h-12 text-base font-semibold transition-all duration-300 hover:shadow-lg">
-      {pending ? 'Signing in...' : 'Sign in'}
-    </Button>
-  );
-}
+import { Label } from '@/components/ui/label';
 
 function SignInPage() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
+  const [selectedUserType, setSelectedUserType] = useState<'kids' | 'teens'>('teens');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const clientAction = async (formData: FormData) => {
+  const handleAnonymousLogin = async (userType: 'kids' | 'teens') => {
+    setIsLoading(true);
     try {
-      const response = await login(formData);
+      const response = await anonymousLogin(userType);
 
       if (response.success) {
-        toast.success('Login successful');
+        toast.success(`Welcome! Logged in as ${userType === 'kids' ? 'Kids' : 'Teens'} user`);
         router.push('/dashboard');
+      } else {
+        toast.error(response.error || 'Login failed');
       }
     } catch (error) {
       console.error('Login failed:', error);
       toast.error('Login failed');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="w-full px-8 md:px-12 items-center sm:justify-center">
-      <form action={clientAction} className="w-full max-w-md mx-auto">
+      <div className="w-full max-w-md mx-auto">
         <Card className="w-full sm:w-full border-none shadow-xl bg-white/90 backdrop-blur-sm rounded-xl">
-          <CardHeader className="">
+          <CardHeader className="space-y-3">
             <div className="mx-auto flex justify-center mb-3">
-              <Image src="/logo-expand.svg" className="w-1/2" alt="Jawab.in Logo" width={300} height={300} priority />
+              <Image src="/logo-expand.svg" className="w-1/2" alt="PINTARU Logo" width={300} height={300} priority />
             </div>
-            <CardTitle className="text-2xl font-bold text-center text-primary-blue">Masuk ke Akun PINTARU</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center text-primary-blue">Welcome to PINTARU</CardTitle>
+            <p className="text-center text-muted-foreground text-sm">Choose your account type to get started</p>
           </CardHeader>
+
           <CardContent className="grid gap-y-5 pt-4">
-            <div className="relative group">
-              <Input type="email" required id="email" name="email" className="pl-11 h-12 rounded-lg border-input/80 transition-all focus:border-primary/80 focus:ring-2 focus:ring-primary/20" placeholder="Enter your email address" />
-              <Mail className="absolute top-1/2 left-6 transform -translate-x-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-1">
+                <Label className="text-sm font-medium text-primary">I am a...</Label>
+                <span className="text-xs text-muted-foreground">Select one</span>
+              </div>
 
-            <div className="relative group">
-              <Input type={showPassword ? 'text' : 'password'} required id="password" name="password" className="pl-11 h-12 rounded-lg border-input/80 transition-all focus:border-primary/80 focus:ring-2 focus:ring-primary/20" placeholder="Enter your password" />
-              <KeyRound className="absolute top-1/2 left-6 transform -translate-x-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              {showPassword ? <EyeOff className="absolute top-1/2 right-2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-primary transition-colors" onClick={() => setShowPassword(false)} /> : <Eye className="absolute top-1/2 right-2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-primary transition-colors" onClick={() => setShowPassword(true)} />}
-            </div>
+              <div className="grid grid-cols-1 gap-4">
+                <div onClick={() => setSelectedUserType('kids')} className={`relative flex items-center justify-between p-4 cursor-pointer rounded-lg border-2 transition-all duration-200 hover:border-primary/50 ${selectedUserType === 'kids' ? 'border-primary-blue bg-primary-blue/10 ring-2 ring-primary-blue/20' : 'border-input/60 hover:bg-gray-50'}`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${selectedUserType === 'kids' ? 'bg-primary-blue text-white' : 'bg-gray-100 text-gray-600'}`}>
+                      <BookOpen size={24} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-lg">Kids / Student</p>
+                      <p className="text-sm text-muted-foreground">Saya Anak / Pelajar</p>
+                    </div>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border-2 ${selectedUserType === 'kids' ? 'border-primary-blue bg-primary-blue' : 'border-gray-300'}`}>{selectedUserType === 'kids' && <div className="w-full h-full rounded-full bg-white scale-50"></div>}</div>
+                </div>
 
-            {/* <div className='flex justify-end'>
-							<Button
-								variant='link'
-								size='sm'
-								className='p-0 text-xs text-primary hover:text-primary/80'
-								asChild
-							>
-								<Link href='/auth/forgot-password'>Forgot password?</Link>
-							</Button>
-						</div> */}
+                <div onClick={() => setSelectedUserType('teens')} className={`relative flex items-center justify-between p-4 cursor-pointer rounded-lg border-2 transition-all duration-200 hover:border-primary/50 ${selectedUserType === 'teens' ? 'border-primary-yellow bg-primary-yellow/10 ring-2 ring-primary-yellow/20' : 'border-input/60 hover:bg-gray-50'}`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${selectedUserType === 'teens' ? 'bg-primary-yellow text-white' : 'bg-gray-100 text-gray-600'}`}>
+                      <Video size={24} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-lg">Teens / Adult</p>
+                      <p className="text-sm text-muted-foreground">Saya Remaja / Dewasa</p>
+                    </div>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border-2 ${selectedUserType === 'teens' ? 'border-primary-yellow bg-primary-yellow' : 'border-gray-300'}`}>{selectedUserType === 'teens' && <div className="w-full h-full rounded-full bg-white scale-50"></div>}</div>
+                </div>
+              </div>
+            </div>
           </CardContent>
 
           <CardFooter>
-            <div className="grid w-full gap-y-5">
-              <SubmitButton />
-              <div className="relative flex items-center justify-center">
-                <div className="absolute w-full border-t border-input/50"></div>
-                <span className="relative px-2 bg-white text-xs text-muted-foreground">OR</span>
-              </div>
-              <Button variant="outline" size="sm" className="w-full h-11 border border-input/80 hover:border-primary/30 hover:bg-primary/5 transition-all font-medium" asChild>
-                <Link href="/auth/register" className="flex gap-1 items-center justify-center">
-                  Don&apos;t have an account? <span className="text-primary font-semibold">Sign up</span>
-                </Link>
+            <div className="grid w-full gap-y-4">
+              <Button onClick={() => handleAnonymousLogin(selectedUserType)} disabled={isLoading} className={`w-full h-12 text-base font-semibold transition-all duration-300 hover:shadow-lg ${selectedUserType === 'kids' ? 'bg-primary-blue hover:bg-primary-blue/90' : 'bg-primary-yellow hover:bg-primary-yellow/90'}`}>
+                {isLoading ? 'Signing in...' : `Continue as ${selectedUserType === 'kids' ? 'Kids' : 'Teens'}`}
               </Button>
+
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">Demo Mode - No registration required</p>
+              </div>
             </div>
           </CardFooter>
         </Card>
-      </form>
+      </div>
     </div>
   );
 }
