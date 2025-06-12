@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Pintaru',
   description: 'Pintaru by UINNOVATORS',
+  other: {
+    'dicoding:email': 'scarryanda@gmail.com',
+  },
 };
 
 export default function RootLayout({
