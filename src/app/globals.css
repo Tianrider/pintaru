@@ -1,6 +1,39 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* OpenDyslexic Font Faces */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/opendyslexic/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/opendyslexic/OpenDyslexic-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/opendyslexic/OpenDyslexic-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/opendyslexic/OpenDyslexic-Bold-Italic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* Force light mode and prevent flashing */
 :root {
   color-scheme: light !important;
@@ -32,8 +65,8 @@ html {
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'OpenDyslexic', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'OpenDyslexic', ui-monospace, monospace;
   --color-primary-yellow: #fbbf24;
   --color-primary-blue: #033369;
   --color-secondary-yellow: #ecbf42;
@@ -114,5 +147,10 @@ html {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'OpenDyslexic', ui-sans-serif, system-ui, sans-serif !important;
+  }
+
+  html {
+    font-family: 'OpenDyslexic', ui-sans-serif, system-ui, sans-serif !important;
   }
 }

@@ -15,10 +15,6 @@ const recommendations = [
     text: 'Carilah nilai x di 2x + 3 = 7',
   },
   {
-    icon: <Leaf className="text-green-400" strokeWidth={3} size={16} />,
-    text: 'Apa itu fotosintesis?',
-  },
-  {
     icon: <CircuitBoard className="text-blue-400" strokeWidth={3} size={16} />,
     text: 'Bagaimana angka binary bekerja?',
   },

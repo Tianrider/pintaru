@@ -42,15 +42,15 @@ export default function Home() {
                     Dengan <span className="font-bold text-primary-blue">PINTARU</span>, cukup ketik atau unggah soal, dan kamu akan langsung mendapatkan penjelasan visual berbentuk video atau cerita interaktif. Cocok untuk anak-anak, pelajar, dan siapa pun yang ingin belajar dengan cara yang berbeda.
                   </p>
 
-                  <div className="pt-4 flex flex-wrap justify-between">
-                    <Button asChild size="lg" className="w-[48%] bg-gradient-to-r from-amber-400 to-amber-500 py-6 text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-amber-300 hover:border-amber-400 rounded-full transform hover:scale-105 flex items-center gap-2">
+                  <div className="pt-4 flex flex-col gap-4">
+                    <Button asChild size="lg" className="w-full bg-gradient-to-r from-amber-400 to-amber-500 py-6 text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-amber-300 hover:border-amber-400 rounded-full transform hover:scale-105 flex items-center gap-2">
                       <Link href="/dashboard flex-shrink-0">
                         <Wand2 size={20} className="mr-1 flex-shrink-0" />
                         Belajar Sekarang!
                       </Link>
                     </Button>
 
-                    <Button asChild variant="outline" size="lg" className="w-[48%] py-6 text-lg font-medium border-2 border-gray-300 hover:border-primary-blue text-gray-700 hover:text-primary-blue rounded-full transition-all duration-300 transform hover:scale-105">
+                    <Button asChild variant="outline" size="lg" className="w-full py-6 text-lg font-medium border-2 border-gray-300 hover:border-primary-blue text-gray-700 hover:text-primary-blue rounded-full transition-all duration-300 transform hover:scale-105">
                       <Link href="#about">Pelajari Selengkapnya</Link>
                     </Button>
                   </div>
@@ -138,7 +138,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="font-bold text-gray-900">Dapatkan XP untuk setiap pembelajaran!</p>
-                      <p className="text-sm text-gray-600">Track progresmu dan tingkatkan pengetahuanmu</p>
+                      <p className="text-sm text-gray-600 pt-1.5">Track progresmu dan tingkatkan pengetahuanmu</p>
                     </div>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export default function Home() {
                     <Book className="h-8 w-8 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl sm:text-3xl font-bold">Bergabunglah dengan Komunitas Kami!</h2>
+                    <h2 className="text-2xl sm:text-2xl pb-1 font-bold">Bergabunglah dengan Komunitas Kami!</h2>
                     <p className="text-blue-100">Temukan cerita dan video dari pembelajar lain di seluruh Indonesia</p>
                   </div>
                 </div>

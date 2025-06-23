@@ -49,7 +49,7 @@ export default function CommunityPage() {
                 <Image src={book.cover} alt={book.title || 'Storybook cover'} fill className="object-cover" />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-lg mb-1">{book.title || 'Untitled Storybook'}</h3>
+                <h3 className="font-bold text-lg mb-2">{book.title || 'Untitled Storybook'}</h3>
                 <div className="flex flex-wrap gap-1 mb-1">
                   {book.theme?.split(',').map((theme, index) => (
                     <span key={index} className="bg-amber-100 text-amber-600 border-amber-300 border px-2 py-0.5 rounded-full text-xs font-medium">
@@ -57,7 +57,7 @@ export default function CommunityPage() {
                     </span>
                   ))}
                 </div>
-                <p className="text-gray-500 text-xs">
+                <p className="text-gray-500 text-xs pt-1">
                   Created at{' '}
                   {new Date(book.created_at).toLocaleDateString('id-ID', {
                     day: 'numeric',

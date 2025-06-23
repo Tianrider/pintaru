@@ -384,7 +384,7 @@ export default function Chat({ imageData, timestamp }: ChatProps) {
       <form onSubmit={handleFormSubmit} className="w-full absolute bottom-0 p-3 bg-white border-t">
         <div className="flex gap-2">
           <input id="chat-input" className="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={input} placeholder={isProcessing ? 'Processing image...' : imagePreview ? `Ask about video at ${timestamp || 'current position'}...` : 'Type a message...'} onChange={handleInputChange} disabled={isProcessing} />
-          <button type="submit" className="p-3 px-5 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled={isLoading || isProcessing || (!input.trim() && !imageUrl)}>
+          <button type="submit" className="p-3 px-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled={isLoading || isProcessing || (!input.trim() && !imageUrl)}>
             {isLoading ? 'Sending...' : 'Send'}
           </button>
         </div>

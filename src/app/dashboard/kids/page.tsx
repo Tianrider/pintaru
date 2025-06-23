@@ -211,7 +211,7 @@ export default function KidsDashboard() {
                 <Image src={book.cover || 'https://upload.wikimedia.org/wikipedia/commons/6/68/Solid_black.png'} alt={book.title || 'Storybook cover'} fill className="object-cover" />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-lg mb-1">{book.title || 'Untitled Storybook'}</h3>
+                <h3 className="font-bold text-sm mb-2">{book.title || 'Untitled Storybook'}</h3>
                 <div className="flex flex-wrap gap-1 mb-1">
                   {book.theme?.split(',').map((theme, index) => (
                     <span key={index} className="bg-amber-100 text-amber-600 border-amber-300 border px-2 py-0.5 rounded-full text-xs font-medium">
@@ -219,7 +219,7 @@ export default function KidsDashboard() {
                     </span>
                   ))}
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="pt-1">
                   <p className="text-gray-500 text-xs">
                     Created at{' '}
                     {new Date(book.created_at).toLocaleDateString('id-ID', {
@@ -230,7 +230,7 @@ export default function KidsDashboard() {
                       minute: '2-digit',
                     })}
                   </p>
-                  <span className="text-blue-500 text-xs font-medium flex items-center gap-1">
+                  <span className="text-blue-500 text-xs font-medium flex items-center gap-1 pt-2">
                     +2 EXP <Trophy size={12} />
                   </span>
                 </div>

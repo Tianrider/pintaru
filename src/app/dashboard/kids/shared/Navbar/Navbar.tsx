@@ -42,7 +42,7 @@ const NavItem: FC<NavItemProps> = ({ icon: Icon, label, path, isActive }) => {
   const router = useRouter();
 
   return (
-    <div onClick={() => router.push(path)} className={cn('cursor-pointer transition-all flex flex-col items-center gap-1 w-20 py-1.5 rounded-md mx-1', isActive ? 'text-primary-yellow bg-yellow-50' : 'text-[#5D5D5D] hover:bg-gray-100 active:bg-gray-200')}>
+    <div onClick={() => router.push(path)} className={cn('cursor-pointer transition-all flex flex-col items-center gap-1 w-32 py-1.5 rounded-md mx-1', isActive ? 'text-primary-yellow bg-yellow-50' : 'text-[#5D5D5D] hover:bg-gray-100 active:bg-gray-200')}>
       <Icon fill={isActive ? '#d9a821' : '#5D5D5D'} width={20} height={20} />
       <span className="text-xs font-semibold">{label}</span>
     </div>
@@ -136,8 +136,6 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-
-
 
       {isMenuOpen && (
         <div className="absolute inset-x-0 top-[54px] bg-white z-20 sm:hidden border-b border-gray-200 shadow-md">
