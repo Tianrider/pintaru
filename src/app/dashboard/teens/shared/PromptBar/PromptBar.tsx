@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRef, useState } from 'react';
-import { CircuitBoard, Globe, ImageIcon, Leaf, Sigma, Sparkles, Video, X } from 'lucide-react';
+import { CircuitBoard, Globe, ImageIcon, Sigma, Sparkles, Video, X } from 'lucide-react';
 import Image from 'next/image';
 
 interface PromptBarProps {

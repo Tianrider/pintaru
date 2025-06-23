@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { getVideoById, getUserVideos } from '@/app/actions/video';
 import { VideoDataType } from '@/types/video-types';
 import { useParams, useRouter } from 'next/navigation';
@@ -85,7 +85,7 @@ export default function VideoPage() {
   }, [loading, videoData, params.id]);
 
   // Capture current frame from video when paused
-  const captureFrame = () => {
+  const captureFrame = useCallback(() => {
     if (!videoRef.current) return;
 
     try {
@@ -107,7 +107,7 @@ export default function VideoPage() {
     } catch (err) {
       console.error('Error capturing frame:', err);
     }
-  };
+  }, []);
 
   // Add pause event listener
   useEffect(() => {
