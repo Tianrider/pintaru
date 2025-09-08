@@ -258,7 +258,7 @@ export default function Home() {
             </div>
 
             <div className="mt-12 pt-6 text-center border-t border-amber-300/50">
-              <p className="text-white font-medium">Copyright © 2025 UINNOVATORS</p>
+              <p className="text-white font-medium">Copyright © 2025 Fasilkom dan FT</p>
             </div>
           </div>
         </footer>
